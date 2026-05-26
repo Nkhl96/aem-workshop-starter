@@ -45,7 +45,7 @@
   font-weight: 600;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   .breadcrumb nav {
     padding: 1.5rem 0;
   }
