@@ -1,4 +1,7 @@
 /* eslint-disable class-methods-use-this */
+import mockMenuItems from './mock-menu-items';
+import mockSearchTerms from './mock-search-terms';
+import mockBookmarks from './mock-bookmarks';
 
 /**
  * HeaderMenu2 - Adobe EDS Vanilla JS Component
@@ -691,11 +694,32 @@ export const decorateHeaderMenu2 = (block) => {
   // Extract component properties from block data
   const data = block.dataset;
 
-  if (data.variation) component.variation = data.variation;
-  if (data.menuItems) component.menuItems = JSON.parse(data.menuItems);
-  if (data.bookmarksLink) component.bookmarksLink = JSON.parse(data.bookmarksLink);
-  if (data.searchResultsPage) component.searchResultsPage = data.searchResultsPage;
-  if (data.popularSearchTerms) component.popularSearchTerms = JSON.parse(data.popularSearchTerms);
+  // Set variation with default
+  component.variation = data.variation || 'transparent';
+
+  // Load menu items from data or use mock data
+  if (data.menuItems) {
+    component.menuItems = JSON.parse(data.menuItems);
+  } else {
+    component.menuItems = mockMenuItems;
+  }
+
+  // Load bookmarks link from data or use mock data
+  if (data.bookmarksLink) {
+    component.bookmarksLink = JSON.parse(data.bookmarksLink);
+  } else {
+    component.bookmarksLink = mockBookmarks;
+  }
+
+  // Set search results page with default
+  component.searchResultsPage = data.searchResultsPage || '/search';
+
+  // Load popular search terms from data or use mock data
+  if (data.popularSearchTerms) {
+    component.popularSearchTerms = JSON.parse(data.popularSearchTerms);
+  } else {
+    component.popularSearchTerms = mockSearchTerms;
+  }
 
   block.replaceChildren(component);
   component.connectedCallback();

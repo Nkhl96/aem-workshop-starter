@@ -1,0 +1,119 @@
+[
+  {
+    "title": "Products",
+    "children": [
+      {
+        "title": "Solutions",
+        "children": [
+          {
+            "title": "Enterprise Solutions",
+            "link": { "href": "/products/enterprise" }
+          },
+          {
+            "title": "SMB Solutions",
+            "link": { "href": "/products/smb" }
+          },
+          {
+            "title": "Startup Solutions",
+            "link": { "href": "/products/startup" }
+          }
+        ]
+      },
+      {
+        "title": "Features",
+        "children": [
+          {
+            "title": "Analytics",
+            "link": { "href": "/features/analytics" }
+          },
+          {
+            "title": "Security",
+            "link": { "href": "/features/security" }
+          },
+          {
+            "title": "Integration",
+            "link": { "href": "/features/integration" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Services",
+    "children": [
+      {
+        "title": "Consulting",
+        "children": [
+          {
+            "title": "Strategy",
+            "link": { "href": "/services/strategy" }
+          },
+          {
+            "title": "Implementation",
+            "link": { "href": "/services/implementation" }
+          },
+          {
+            "title": "Training",
+            "link": { "href": "/services/training" }
+          }
+        ]
+      },
+      {
+        "title": "Support",
+        "children": [
+          {
+            "title": "24/7 Support",
+            "link": { "href": "/support/24-7" }
+          },
+          {
+            "title": "Documentation",
+            "link": { "href": "/support/docs" }
+          },
+          {
+            "title": "Community",
+            "link": { "href": "/support/community" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Resources",
+    "children": [
+      {
+        "title": "Learning",
+        "children": [
+          {
+            "title": "Tutorials",
+            "link": { "href": "/resources/tutorials" }
+          },
+          {
+            "title": "Webinars",
+            "link": { "href": "/resources/webinars" }
+          },
+          {
+            "title": "Blog",
+            "link": { "href": "/resources/blog" }
+          }
+        ]
+      },
+      {
+        "title": "Company",
+        "children": [
+          {
+            "title": "About Us",
+            "link": { "href": "/about" }
+          },
+          {
+            "title": "Careers",
+            "link": { "href": "/careers" }
+          },
+          {
+            "title": "Contact",
+            "link": { "href": "/contact" }
+          }
+        ]
+      }
+    ]
+  }
+]
