@@ -1,0 +1,831 @@
+/* HeaderMenu2 Component Styles */
+
+/* ============================================
+   Header Wrapper & Base Styles
+   ============================================ */
+
+header-menu2,
+.header-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 200;
+  transition: color 0.35s ease 0s, background-color 0.35s ease 0s;
+  letter-spacing: 0.1rem;
+}
+
+header-menu2[data-variation="transparent"][data-scrolled="true"]:not([data-menu-open="true"]) {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+header-menu2[data-variation="transparent"][data-scrolled="true"]:not([data-variation="fully-transparent"]) {
+  border-bottom: 1px solid rgba(166, 184, 193, 0.2);
+}
+
+header-menu2[data-variation="white"],
+header-menu2[data-variation="white"][data-menu-open="true"] {
+  background-color: rgb(255, 255, 255);
+  border-bottom: 1px solid rgba(166, 184, 193, 0.2);
+}
+
+header-menu2[data-menu-open="true"] {
+  background-color: rgb(255, 255, 255);
+  border-bottom: 1px solid rgba(166, 184, 193, 0.2);
+}
+
+header-menu2[data-variation="fully-transparent"][data-scrolled="true"]:not([data-menu-open="true"]) {
+  border-bottom: none;
+}
+
+/* AEM Author Mode */
+.cq-Editable-dom header-menu2,
+.cq-Editable-dom .header-wrapper,
+.aem-AuthorLayer-Edit header-menu2,
+.aem-AuthorLayer-Edit .header-wrapper {
+  position: relative !important;
+}
+
+/* ============================================
+   Header Inner Wrapper
+   ============================================ */
+
+.header-inner-wrapper {
+  position: relative;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  max-width: 1584px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .header-inner-wrapper {
+    padding: 0 2rem;
+  }
+}
+
+.header-inner-wrapper img {
+  max-width: 145px;
+}
+
+/* ============================================
+   Logo
+   ============================================ */
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.logo.logo-white {
+  color: #ffffff;
+}
+
+.logo-white svg path,
+.logo-white svg g {
+  fill: #ffffff;
+}
+
+.logo.logo-teal {
+  color: #0b5d7a;
+}
+
+.logo-teal svg path,
+.logo-teal svg g {
+  fill: #0b5d7a;
+}
+
+/* ============================================
+   Navigation Wrapper
+   ============================================ */
+
+.navigation-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2.75rem;
+  height: 100%;
+}
+
+/* ============================================
+   Icon Group
+   ============================================ */
+
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* ============================================
+   Hamburger Menu
+   ============================================ */
+
+.hamburger-menu {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-menu.burger-white svg path {
+  fill: #ffffff;
+}
+
+.hamburger-menu.burger-teal svg path {
+  fill: #0b5d7a;
+}
+
+.hamburger-menu.burger-charcoal svg path {
+  fill: #212121;
+}
+
+.hamburger-menu span,
+.hamburger-menu svg {
+  pointer-events: none;
+}
+
+/* ============================================
+   Desktop Navigation
+   ============================================ */
+
+.nav-links {
+  display: flex;
+  gap: 2.75rem;
+  padding-left: 2.75rem;
+  height: 100%;
+  margin: 0;
+  list-style: none;
+  role: menubar;
+}
+
+.nav-link-item {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  position: relative;
+  role: none;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.125rem;
+  text-transform: uppercase;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  position: relative;
+  letter-spacing: 0.1rem;
+  transition: color 0.35s ease;
+}
+
+.nav-link.color-teal {
+  color: #0b5d7a;
+}
+
+.nav-link.color-teal:after {
+  background-color: #0b5d7a;
+}
+
+.nav-link.color-charcoal {
+  color: #212121;
+}
+
+.nav-link.color-charcoal:after {
+  background-color: #0b5d7a;
+}
+
+.nav-link::after {
+  content: '';
+  height: 0px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.35s;
+  background-color: #ffffff;
+}
+
+.nav-link:hover::after,
+.nav-link.is-active::after {
+  height: 4px;
+}
+
+.nav-link:hover.color-charcoal {
+  color: #0b5d7a;
+}
+
+.nav-link:hover.color-white {
+  color: #ffffff;
+}
+
+/* ============================================
+   Search Wrapper
+   ============================================ */
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper.icon-white svg path,
+.search-wrapper.icon-white svg g {
+  stroke: #ffffff;
+}
+
+.search-wrapper.icon-teal svg path,
+.search-wrapper.icon-teal svg g {
+  stroke: #0b5d7a;
+}
+
+.search-wrapper.icon-charcoal svg path,
+.search-wrapper.icon-charcoal svg g {
+  stroke: #212121;
+}
+
+.search-wrapper.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ============================================
+   Desktop Menu Modal
+   ============================================ */
+
+.header-menu-modal {
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  position: fixed;
+  left: 0;
+  top: 80px;
+  border-top: 1px solid rgba(166, 184, 193, 0.2);
+  width: 100%;
+  z-index: 200;
+  max-height: calc(100vh - 80px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.header-menu-modal::before {
+  content: '';
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(51, 63, 72, 0.8);
+}
+
+/* ============================================
+   Header Menu Inner Wrapper
+   ============================================ */
+
+.header-menu-inner-wrapper {
+  position: relative;
+  z-index: 200;
+  padding: 2rem 1rem;
+  max-width: 1584px;
+  margin: 0 auto;
+  background: #ffffff;
+  display: flex;
+  flex-direction: row;
+}
+
+@media (min-width: 768px) {
+  .header-menu-inner-wrapper {
+    padding: 4.375rem 4rem 2rem 2rem;
+  }
+}
+
+@media (min-width: 1584px) {
+  .header-menu-inner-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -99%;
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+  }
+
+  .header-menu-inner-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -99%;
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.col {
+  width: 33.33%;
+}
+
+.col:not(:nth-of-type(3)) {
+  padding-right: 2rem;
+}
+
+@media (min-width: 1280px) {
+  .col:not(:nth-of-type(3)) {
+    padding-right: 3rem;
+  }
+}
+
+.col:not(:nth-of-type(1)) {
+  padding-left: 2rem;
+  border-left: 1px solid #e8ecef;
+}
+
+@media (min-width: 1280px) {
+  .col:not(:nth-of-type(1)) {
+    padding-left: 3rem;
+  }
+}
+
+.close-button {
+  cursor: pointer;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+}
+
+.close-button:focus-visible {
+  outline: -webkit-focus-ring-color auto 1px;
+}
+
+.close-button svg path {
+  fill: #0b5d7a;
+}
+
+.header-menu-inner-wrapper ul {
+  padding-left: 0;
+  list-style: none;
+  margin: 0;
+}
+
+.header-menu-inner-wrapper li {
+  margin-bottom: 1.75rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.header-menu-inner-wrapper a {
+  text-decoration: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0 0.75rem;
+  padding: 0.25rem 0;
+  color: #212121;
+  transition: color 0.35s ease;
+}
+
+.header-menu-inner-wrapper a::after {
+  content: '';
+  height: 0px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: height 0.35s;
+  background-color: #0b5d7a;
+}
+
+.header-menu-inner-wrapper a.has-icon {
+  padding: 0.25rem 0 0.25rem 3rem;
+}
+
+.header-menu-inner-wrapper a.has-icon::after {
+  left: 3rem;
+  width: calc(100% - 3rem);
+}
+
+.header-menu-inner-wrapper a.has-icon img {
+  width: 2.125rem;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.header-menu-inner-wrapper a:hover::after {
+  height: 2px;
+}
+
+/* ============================================
+   Desktop Menu Title & Items
+   ============================================ */
+
+.desktop-menu-title {
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0b5d7a;
+  margin: 40px 0 0.6rem;
+  padding: 0;
+}
+
+.desktop-menu-items {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.4px;
+}
+
+/* ============================================
+   Mobile Search Wrapper
+   ============================================ */
+
+.mobile-search-wrapper {
+  position: relative;
+  z-index: 200;
+  background-color: #ffffff;
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #e8ecef;
+}
+
+@media (min-width: 768px) {
+  .mobile-search-wrapper {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.mobile-search-wrapper.icon-white svg path,
+.mobile-search-wrapper.icon-white svg g {
+  stroke: #ffffff;
+}
+
+.mobile-search-wrapper.icon-teal svg path,
+.mobile-search-wrapper.icon-teal svg g {
+  stroke: #0b5d7a;
+}
+
+.mobile-search-wrapper.icon-charcoal svg path,
+.mobile-search-wrapper.icon-charcoal svg g {
+  stroke: #212121;
+}
+
+/* ============================================
+   Mobile Menu Modal
+   ============================================ */
+
+.mobile-header-menu-modal {
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  position: fixed;
+  left: 0;
+  top: 81px;
+  width: 100%;
+  z-index: 200;
+}
+
+.mobile-header-menu-modal::before {
+  content: '';
+  position: fixed;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #e8ecef;
+}
+
+.mobile-header-menu-modal > div {
+  z-index: 200;
+}
+
+/* ============================================
+   Mobile Header Menu Inner Wrapper
+   ============================================ */
+
+.mobile-header-menu-inner-wrapper {
+  position: relative;
+  z-index: 200;
+  width: 100%;
+  height: calc(100vh - 81px);
+  height: calc(100svh - 81px);
+  padding-bottom: 4rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  color: #212121;
+}
+
+/* ============================================
+   Accordion
+   ============================================ */
+
+.accordion {
+  border-bottom: 1px solid #e8ecef;
+}
+
+.accordion-heading {
+  width: 100%;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  text-transform: uppercase;
+  color: #212121;
+  font-weight: 500;
+  margin: 0;
+  padding: 1.75rem 1rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+
+@media (min-width: 768px) {
+  .accordion-heading {
+    padding: 1.75rem 2rem;
+  }
+}
+
+.accordion-heading svg {
+  transform: rotate(90deg);
+  margin-right: 0.35rem;
+}
+
+.accordion-heading.is-expanded {
+  background: #c8e0e8;
+  color: #0b5d7a;
+}
+
+.accordion-heading.is-expanded svg {
+  transform: rotate(-90deg);
+}
+
+/* ============================================
+   Accordion Content
+   ============================================ */
+
+.accordion-content {
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .accordion-content {
+    padding: 1.25rem 2rem;
+  }
+}
+
+.accordion-content ul {
+  order: 1;
+}
+
+.accordion-content ul .accordion-item:last-child {
+  margin-bottom: 0.5rem;
+}
+
+.mobile-show-all,
+.mobile-show-less {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: #212121;
+  opacity: 0.85;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-top: 1rem;
+}
+
+.mobile-show-all span,
+.mobile-show-less span {
+  color: #212121;
+}
+
+.mobile-show-all svg,
+.mobile-show-less svg {
+  margin-right: 1.25rem;
+}
+
+.mobile-show-all svg {
+  transform: rotate(90deg) translateY(-5px);
+}
+
+.mobile-show-less svg {
+  transform: rotate(-90deg) translateY(5px);
+}
+
+/* ============================================
+   Mobile Menu Lists
+   ============================================ */
+
+.mobile-header-menu-inner-wrapper ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.mobile-header-menu-inner-wrapper > ul > li {
+  margin-bottom: 2.5rem;
+}
+
+.item-list {
+  padding: 0;
+  list-style: none;
+}
+
+.item-list li {
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.item-list li:last-child {
+  margin-bottom: 0;
+}
+
+.item-list a {
+  color: #212121;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0 0.75rem;
+  padding: 0.25rem 0;
+  position: relative;
+}
+
+.item-list a.has-icon {
+  padding: 0.25rem 0 0.25rem 3rem;
+}
+
+.item-list a.has-icon img {
+  width: 2.125rem;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+/* ============================================
+   Mobile Menu Bookmark
+   ============================================ */
+
+.mobile-header-menu-bookmark {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0 1rem;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: #ffffff;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.mobile-header-menu-bookmark.fixed {
+  position: fixed;
+  bottom: 0;
+}
+
+.mobile-header-menu-bookmark.relative {
+  position: relative;
+  top: 4rem;
+}
+
+.mobile-header-menu-bookmark a {
+  padding: 1rem;
+  background: #c8e0e8;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #212121;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ============================================
+   Mobile Navigation Buttons
+   ============================================ */
+
+.mobile-nav-link-button {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.mobile-accordion-menu-heading {
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  margin: 0 0 1.5rem 0;
+  color: #0b5d7a;
+  padding: 0;
+}
+
+.mobile-accordion-menu-item {
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.show-more-accordion-button {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.125rem;
+  text-decoration: none;
+}
+
+.my-bookmarks-label {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+/* ============================================
+   Desktop Menu Item Icon
+   ============================================ */
+
+.desktop-menu-item-icon {
+  height: auto;
+  width: 1.85rem;
+  vertical-align: middle;
+  padding-right: 4px;
+}
+
+/* ============================================
+   Preloaded Nav Links List (Hidden)
+   ============================================ */
+
+.preloaded-nav-links {
+  display: none;
+}
+
+/* ============================================
+   Mobile Trigger Buttons
+   ============================================ */
+
+.mobile-search-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-search-trigger svg {
+  pointer-events: none;
+}
