@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
-import mockMenuItems from './mock-menu-items';
-import mockSearchTerms from './mock-search-terms';
-import mockBookmarks from './mock-bookmarks';
+// import mockMenuItems from './mock-menu-items';
+// import mockSearchTerms from './mock-search-terms';
+// import mockBookmarks from './mock-bookmarks';
 
 /**
  * HeaderMenu2 - Adobe EDS Vanilla JS Component
@@ -704,14 +704,14 @@ export const decorateHeaderMenu2 = (block) => {
   if (data.menuItems) {
     component.menuItems = JSON.parse(data.menuItems);
   } else {
-    component.menuItems = mockMenuItems;
+    // component.menuItems = mockMenuItems;
   }
 
   // Load bookmarks link from data or use mock data
   if (data.bookmarksLink) {
     component.bookmarksLink = JSON.parse(data.bookmarksLink);
   } else {
-    component.bookmarksLink = mockBookmarks;
+    // component.bookmarksLink = mockBookmarks;
   }
 
   // Set search results page with default
@@ -721,7 +721,7 @@ export const decorateHeaderMenu2 = (block) => {
   if (data.popularSearchTerms) {
     component.popularSearchTerms = JSON.parse(data.popularSearchTerms);
   } else {
-    component.popularSearchTerms = mockSearchTerms;
+    // component.popularSearchTerms = mockSearchTerms;
   }
 
   block.replaceChildren(component);
