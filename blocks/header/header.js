@@ -3,6 +3,8 @@
 // import mockSearchTerms from './mock-search-terms';
 // import mockBookmarks from './mock-bookmarks';
 
+import { readBlockConfig } from '../../scripts/aem.js';
+
 /**
  * HeaderMenu2 - Adobe EDS Vanilla JS Component
  * Manages desktop and mobile navigation, search, bookmarks, and accessibility
@@ -748,8 +750,10 @@ export default async function decorate(block) {
   // Extract component properties from block data
   const data = block.dataset;
 
+  const config = readBlockConfig(block);
+
   // eslint-disable-next-line no-console
-  console.log('HeaderMenu2 data attributes:', data); // Debug log to check data attributes
+  console.log('HeaderMenu2 data attributes:', config); // Debug log to check data attributes
 
   // Set variation with default
   component.variation = data.variation || 'transparent';
