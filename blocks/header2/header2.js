@@ -694,6 +694,9 @@ export const decorateHeaderMenu2 = (block) => {
   // Extract component properties from block data
   const data = block.dataset;
 
+  // eslint-disable-next-line no-console
+  console.log('HeaderMenu2 data attributes:', data); // Debug log to check data attributes
+
   // Set variation with default
   component.variation = data.variation || 'transparent';
 
