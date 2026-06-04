@@ -11,10 +11,64 @@ export class HeaderMenu2 extends HTMLElement {
   constructor() {
     super();
     this.variation = 'transparent';
-    this.menuItems = [];
-    this.popularSearchTerms = [];
-    this.searchResultsPage = '';
-    this.bookmarksLink = null;
+    this.menuItems = [
+      {
+        title: 'Products',
+        children: [
+          {
+            title: 'By Category',
+            children: [
+              { title: 'Cloud Services', link: { href: '/products/cloud' } },
+              { title: 'Analytics', link: { href: '/products/analytics' } },
+              { title: 'Commerce', link: { href: '/products/commerce' } },
+              { title: 'Experience Manager', link: { href: '/products/aem' } },
+              { title: 'Marketing Automation', link: { href: '/products/marketing' } },
+            ],
+          },
+          {
+            title: 'All Products',
+            children: [
+              { title: 'View All Products', link: { href: '/all-products' } },
+            ],
+          },
+        ],
+      },
+      {
+        title: 'Solutions',
+        children: [
+          {
+            title: 'Business Solutions',
+            children: [
+              { title: 'Digital Marketing', link: { href: '/solutions/marketing' } },
+              { title: 'E-commerce', link: { href: '/solutions/ecommerce' } },
+              { title: 'Customer Experience', link: { href: '/solutions/cx' } },
+            ],
+          },
+        ],
+      },
+      {
+        title: 'Support',
+        children: [
+          {
+            title: 'Help & Resources',
+            children: [
+              { title: 'Documentation', link: { href: '/docs' } },
+              { title: 'Community', link: { href: '/community' } },
+              { title: 'Contact Support', link: { href: '/support' } },
+            ],
+          },
+        ],
+      },
+    ];
+    this.popularSearchTerms = [
+      'Cloud Services',
+      'Analytics',
+      'Experience Manager',
+      'Commerce',
+      'API Documentation',
+    ];
+    this.searchResultsPage = '/search';
+    this.bookmarksLink = { href: '/bookmarks' };
     this.headerHeight = 80;
     this.maxItemsToShow = 5;
 
