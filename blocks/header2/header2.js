@@ -688,7 +688,7 @@ export class HeaderMenu2 extends HTMLElement {
 /**
  * AEM EDS Decorator for auto-initialization
  */
-export const decorate = (block) => {
+export default async function decorate(block) {
   const component = new HeaderMenu2();
 
   // Extract component properties from block data
@@ -728,6 +728,6 @@ export const decorate = (block) => {
   component.connectedCallback();
 
   return component;
-};
+}
 
-customElements.define('header-menu2', HeaderMenu2);
+// customElements.define('header-menu2', HeaderMenu2);
