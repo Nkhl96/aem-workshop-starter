@@ -689,7 +689,7 @@ export class HeaderMenu2 extends HTMLElement {
  * AEM EDS Decorator for auto-initialization
  */
 export default async function decorate(block) {
-  const component = new HeaderMenu2();
+  const component = document.createElement('header-menu2');
 
   // Extract component properties from block data
   const data = block.dataset;
@@ -725,9 +725,8 @@ export default async function decorate(block) {
   }
 
   block.replaceChildren(component);
-  component.connectedCallback();
 
   return component;
 }
 
-// customElements.define('header-menu2', HeaderMenu2);
+customElements.define('header-menu2', HeaderMenu2);
