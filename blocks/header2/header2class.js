@@ -2529,7 +2529,7 @@ export default class HeaderMenu2 extends HTMLElement {
     const preloadedNav = document.createElement('nav');
     preloadedNav.className = 'preloaded-nav-links';
     preloadedNav.setAttribute('aria-label', 'Main navigation');
-    preloadedNav.innerHTML = this.getNestedNavItemsHTML(this.menuItems || []);
+    preloadedNav.innerHTML = HeaderMenu2.getNestedNavItemsHTML(this.menuItems || []);
     this.appendChild(preloadedNav);
 
     // Create header inner wrapper
@@ -2585,7 +2585,7 @@ export default class HeaderMenu2 extends HTMLElement {
 
         const innerWrapper = document.createElement('div');
         innerWrapper.className = 'header-menu-inner-wrapper';
-        this.renderDesktopMenuContent(item, index, innerWrapper);
+        HeaderMenu2.renderDesktopMenuContent(item, index, innerWrapper);
         dialog.appendChild(innerWrapper);
 
         li.appendChild(dialog);
