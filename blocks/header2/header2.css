@@ -826,4 +826,48 @@ header-menu2[data-variation="fully-transparent"][data-scrolled="true"]:not([data
   justify-content: center;
 }
 
+/* ============================================
+   Header State Based Text / Icon Colors
+   ============================================ */
 
+/* Selected / open header state (white header): make nav text and icons black */
+header-menu2[data-menu-open="true"] .nav-link,
+header-menu2[data-variation="white"] .nav-link,
+header-menu2[data-menu-open="true"] .search-wrapper svg path,
+header-menu2[data-menu-open="true"] .search-wrapper svg g,
+header-menu2[data-variation="white"] .search-wrapper svg path,
+header-menu2[data-variation="white"] .search-wrapper svg g,
+header-menu2[data-menu-open="true"] .hamburger-menu svg path,
+header-menu2[data-variation="white"] .hamburger-menu svg path,
+header-menu2[data-menu-open="true"] .mobile-search-trigger svg path,
+header-menu2[data-menu-open="true"] .mobile-search-trigger svg g,
+header-menu2[data-variation="white"] .mobile-search-trigger svg path,
+header-menu2[data-variation="white"] .mobile-search-trigger svg g {
+  color: #212121;
+  fill: #212121;
+  stroke: #212121;
+}
+
+/* Keep selected/open nav trigger readable on the white header */
+header-menu2[data-menu-open="true"] .nav-link.is-active,
+header-menu2[data-variation="white"] .nav-link.is-active {
+  color: #212121;
+}
+
+/* Transparent / unselected header state: keep nav text and icons white */
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .nav-link,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .nav-link,
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .search-wrapper svg path,
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .search-wrapper svg g,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .search-wrapper svg path,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .search-wrapper svg g,
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .hamburger-menu svg path,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .hamburger-menu svg path,
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .mobile-search-trigger svg path,
+header-menu2[data-variation="transparent"]:not([data-menu-open="true"]) .mobile-search-trigger svg g,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .mobile-search-trigger svg path,
+header-menu2[data-variation="fully-transparent"]:not([data-menu-open="true"]) .mobile-search-trigger svg g {
+  color: #fff;
+  fill: #fff;
+  stroke: #fff;
+}
