@@ -2734,44 +2734,133 @@ export default class HeaderMenu2 extends HTMLElement {
   /**
    * Get nested navigation items as HTML
    */
+  static escapeHTML(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   static getNestedNavItemsHTML(items) {
-    return items.map((item) => {
-      let html = `<div class="navigation-wrapper" aria-label="${item.title}">`;
+    if (!Array.isArray(items) || items.length === 0) return '';
 
-      // Add image grid if exists
-      if (item.imageGrid?.grid?.length > 0) {
-        html += `<div class="navigation-wrapper" aria-label="${item.imageGrid.gridTitle}">`;
-        item.imageGrid.grid.forEach((imageGridChild) => {
-          html += `<a href="${imageGridChild.imageLink}" aria-label="${imageGridChild.imageTitle}">${imageGridChild.imageTitle}</a>`;
-        });
-        html += '</div>';
-      }
+    const renderLinkItem = (title, href) => {
+      const safeTitle = HeaderMenu2.escapeHTML(title);
+      const safeHref = HeaderMenu2.escapeHTML(href || '#');
+      return `<li><p><a href="${safeHref}">${safeTitle}</a></p></li>`;
+    };
 
-      // Add children
-      if (item.children) {
-        item.children.forEach((menuItemChild) => {
-          if (menuItemChild.children?.length > 0) {
-            html += `<div class="navigation-wrapper" aria-label="${menuItemChild.title}">`;
-            menuItemChild.children.forEach((subChild) => {
-              html += `<a href="${subChild.link?.href || '#'}" aria-label="${subChild.title}">${subChild.title}</a>`;
-            });
-            html += '</div>';
-          }
-        });
-      }
+    const renderImageGrid = (imageGrid) => {
+      if (!imageGrid?.grid?.length) return '';
 
-      html += '</div>';
-      return html;
+      const safeTitle = HeaderMenu2.escapeHTML(imageGrid.gridTitle);
+      const cards = imageGrid.grid.map((entry) => {
+        const safeImage = HeaderMenu2.escapeHTML(entry.image || '');
+        const safeImageTitle = HeaderMenu2.escapeHTML(entry.imageTitle || '');
+        const safeImageLink = HeaderMenu2.escapeHTML(entry.imageLink || '#');
+        const safeDescription = HeaderMenu2.escapeHTML(entry.imageDescription || '');
+
+        const imageMarkup = safeImage
+          ? `<p><a href="${safeImageLink}"><img src="${safeImage}" alt="${safeImageTitle}" /></a></p>`
+          : '';
+        const titleMarkup = `<p><a href="${safeImageLink}">${safeImageTitle}</a></p>`;
+        const descriptionMarkup = safeDescription ? `<p>${safeDescription}</p>` : '';
+
+        return `<li>${imageMarkup}${titleMarkup}${descriptionMarkup}</li>`;
+      }).join('');
+
+      return `<li><p><strong>${safeTitle}</strong></p><ul>${cards}</ul></li>`;
+    };
+
+    const renderSection = (heading, children) => {
+      const safeHeading = HeaderMenu2.escapeHTML(heading);
+      const childItems = (children || []).map((child) => renderLinkItem(child.title, child.link?.href)).join('');
+      return `<li><p><strong>${safeHeading}</strong></p><ul>${childItems}</ul></li>`;
+    };
+
+    const topLevelItems = items.map((item) => {
+      const safeTitle = HeaderMenu2.escapeHTML(item.title);
+      const nestedItems = [];
+
+      const imageGridMarkup = renderImageGrid(item.imageGrid);
+      if (imageGridMarkup) nestedItems.push(imageGridMarkup);
+
+      (item.children || []).forEach((child) => {
+        if (child.children?.length) {
+          nestedItems.push(renderSection(child.title, child.children));
+        } else {
+          nestedItems.push(renderLinkItem(child.title, child.link?.href));
+        }
+      });
+
+      return `<li><p>${safeTitle}</p><ul>${nestedItems.join('')}</ul></li>`;
     }).join('');
+
+    return `<ul>${topLevelItems}</ul>`;
   }
 
   /**
    * Render desktop menu content
    */
   static renderDesktopMenuContent(item, index, container) {
-    if (!item.children) return;
+    const imageGrid = item.imageGrid?.grid?.length ? item.imageGrid : null;
 
-    item.children.forEach((child, childIndex) => {
+    if (!imageGrid && !item.children) return;
+
+    if (imageGrid) {
+      const imageCol = document.createElement('div');
+      imageCol.className = 'col image-grid-col';
+
+      const heading = document.createElement('h4');
+      heading.id = `desktop-menu-title-${index}-image-grid`;
+      heading.className = 'desktop-menu-title';
+      heading.textContent = imageGrid.gridTitle;
+      imageCol.appendChild(heading);
+
+      const cardList = document.createElement('ul');
+      cardList.className = 'desktop-menu-image-grid';
+
+      imageGrid.grid.forEach((gridItem, gridIndex) => {
+        const li = document.createElement('li');
+        li.className = 'desktop-menu-image-card';
+
+        const link = document.createElement('a');
+        link.href = gridItem.imageLink || '#';
+        link.className = 'desktop-menu-image-link';
+        link.setAttribute('aria-label', gridItem.imageTitle || imageGrid.gridTitle || `Image ${gridIndex + 1}`);
+
+        if (gridItem.image) {
+          const image = document.createElement('img');
+          image.src = gridItem.image;
+          image.alt = gridItem.imageTitle || '';
+          image.className = 'desktop-menu-image';
+          link.appendChild(image);
+        }
+
+        const title = document.createElement('span');
+        title.className = 'desktop-menu-image-title';
+        title.textContent = gridItem.imageTitle || '';
+        link.appendChild(title);
+
+        li.appendChild(link);
+
+        if (gridItem.imageDescription) {
+          const description = document.createElement('p');
+          description.className = 'desktop-menu-image-description';
+          description.textContent = gridItem.imageDescription;
+          li.appendChild(description);
+        }
+
+        cardList.appendChild(li);
+      });
+
+      imageCol.appendChild(cardList);
+      container.appendChild(imageCol);
+    }
+
+    (item.children || []).forEach((child, childIndex) => {
       if (child.children && child.children.length > 0) {
         const col = document.createElement('div');
         col.className = 'col';
@@ -2803,6 +2892,55 @@ export default class HeaderMenu2 extends HTMLElement {
    * Render mobile menu content
    */
   renderMobileMenuContent(item, index, container) {
+    if (item.imageGrid?.grid?.length) {
+      const imageWrapper = document.createElement('div');
+
+      const imageHeading = document.createElement('h4');
+      imageHeading.className = 'mobile-accordion-menu-heading';
+      imageHeading.textContent = item.imageGrid.gridTitle;
+      imageWrapper.appendChild(imageHeading);
+
+      const imageList = document.createElement('ul');
+      imageList.className = 'item-list mobile-image-grid';
+
+      item.imageGrid.grid.forEach((gridItem) => {
+        const li = document.createElement('li');
+        li.className = 'mobile-image-grid-item';
+
+        const link = document.createElement('a');
+        link.href = gridItem.imageLink || '#';
+        link.className = 'mobile-image-grid-link';
+        link.setAttribute('aria-label', gridItem.imageTitle || item.imageGrid.gridTitle);
+
+        if (gridItem.image) {
+          const image = document.createElement('img');
+          image.src = gridItem.image;
+          image.alt = gridItem.imageTitle || '';
+          image.className = 'mobile-image-grid-image';
+          link.appendChild(image);
+        }
+
+        const title = document.createElement('span');
+        title.className = 'mobile-image-grid-title';
+        title.textContent = gridItem.imageTitle || '';
+        link.appendChild(title);
+
+        li.appendChild(link);
+
+        if (gridItem.imageDescription) {
+          const description = document.createElement('p');
+          description.className = 'mobile-image-grid-description';
+          description.textContent = gridItem.imageDescription;
+          li.appendChild(description);
+        }
+
+        imageList.appendChild(li);
+      });
+
+      imageWrapper.appendChild(imageList);
+      container.appendChild(imageWrapper);
+    }
+
     if (!item.children) return;
 
     item.children.forEach((child) => {
@@ -2831,7 +2969,6 @@ export default class HeaderMenu2 extends HTMLElement {
         });
         wrapper.appendChild(list);
 
-        // Add show more/less button if needed
         if (child.children.length > this.maxItemsToShow) {
           const button = document.createElement('button');
           button.className = this.state.showAllIndexes[index] ? 'mobile-show-less' : 'mobile-show-all';
