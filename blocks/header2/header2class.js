@@ -2581,6 +2581,15 @@ export default class HeaderMenu2 extends HTMLElement {
         dialog.setAttribute('id', `menu-item-${index}`);
         dialog.setAttribute('aria-label', `${item.title} navigation`);
         dialog.setAttribute('aria-labelledby', `desktop-menu-title-${index}-0`);
+
+        const isActiveDialog = this.state.activeIndex === index && this.state.isMenuOpen;
+
+        if (isActiveDialog) {
+          dialog.setAttribute('open', '');
+        } else {
+          dialog.removeAttribute('open');
+        }
+
         dialog.addEventListener('click', (e) => this.handleCloseModalClick(e));
 
         const innerWrapper = document.createElement('div');
