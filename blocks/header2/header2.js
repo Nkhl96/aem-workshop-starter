@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 
 /**
@@ -171,6 +172,8 @@ function parseBoolean(value, fallback = false) {
 export default async function decorate(block) {
   const component = document.createElement('header-menu2');
   const data = block.dataset;
+
+  console.log('Data Blocks: ', data);
 
   if (data.enableV2 !== undefined) {
     component.enableV2 = parseBoolean(data.enableV2, true);
