@@ -162,9 +162,62 @@ function getAuthoredMenuItems(source) {
   return getDirectChildrenByTag(rootList, 'LI').map((listItem) => parseTopLevelItem(listItem));
 }
 
+function parseBoolean(value, fallback = false) {
+  if (value === undefined || value === null || value === '') return fallback;
+  if (typeof value === 'boolean') return value;
+  return String(value).toLowerCase() === 'true';
+}
+
 export default async function decorate(block) {
   const component = document.createElement('header-menu2');
   const data = block.dataset;
+
+  if (data.enableV2 !== undefined) {
+    component.enableV2 = parseBoolean(data.enableV2, true);
+  }
+
+  if (data.variation) {
+    component.variation = data.variation;
+  }
+
+  if (data.teqLogoSrc) {
+    component.teqLogo = {
+      ...(component.teqLogo || {}),
+      src: data.teqLogoSrc,
+    };
+  }
+
+  if (data.teqLogoWhite) {
+    component.teqLogoWhite = {
+      ...(component.teqLogoWhite || {}),
+      src: data.teqLogoWhite,
+    };
+  }
+
+  if (data.searchResultsPage) {
+    component.searchResultsPage = data.searchResultsPage;
+  }
+
+  if (data.backText) {
+    component.backText = data.backText;
+  }
+
+  if (data.cancelText) {
+    component.cancelText = data.cancelText;
+  }
+
+  if (data.suggestText) {
+    component.suggestText = data.suggestText;
+    component.suggestedText = data.suggestText;
+  }
+
+  if (data.popularSearchesText) {
+    component.popularSearchesText = data.popularSearchesText;
+  }
+
+  if (data.searchForText) {
+    component.searchForText = data.searchForText;
+  }
 
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
