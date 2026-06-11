@@ -654,16 +654,16 @@ class HeroBannerBlock {
 
     this.config = {
       ...this.defaults,
-      ...parsed,
-      autoplay: toNumber(parsed.autoplay, this.defaults.autoplay),
-      heightRatio: Math.max(0.2, toNumber(parsed.heightRatio, this.defaults.heightRatio)),
-      minHeight: toNumber(parsed.minHeight, this.defaults.minHeight),
-      contentTileHeight: toNumber(parsed.contentTileHeight, this.defaults.contentTileHeight),
-      textShadow: toBoolean(parsed.textShadow, this.defaults.textShadow),
-      showPlayPauseButton: toBoolean(parsed.showPlayPauseButton, this.defaults.showPlayPauseButton),
-      showContentTile: toBoolean(parsed.showContentTile, this.defaults.showContentTile),
-      breadcrumbItems: Array.isArray(parsed.breadcrumbItems) ? parsed.breadcrumbItems : [...this.defaults.breadcrumbItems],
-      slides: Array.isArray(parsed.slides) ? parsed.slides : [...this.defaults.slides],
+      // ...parsed,
+      // autoplay: toNumber(parsed.autoplay, this.defaults.autoplay),
+      // heightRatio: Math.max(0.2, toNumber(parsed.heightRatio, this.defaults.heightRatio)),
+      // minHeight: toNumber(parsed.minHeight, this.defaults.minHeight),
+      // contentTileHeight: toNumber(parsed.contentTileHeight, this.defaults.contentTileHeight),
+      // textShadow: toBoolean(parsed.textShadow, this.defaults.textShadow),
+      // showPlayPauseButton: toBoolean(parsed.showPlayPauseButton, this.defaults.showPlayPauseButton),
+      // showContentTile: toBoolean(parsed.showContentTile, this.defaults.showContentTile),
+      // breadcrumbItems: Array.isArray(parsed.breadcrumbItems) ? parsed.breadcrumbItems : [...this.defaults.breadcrumbItems],
+      // slides: Array.isArray(parsed.slides) ? parsed.slides : [...this.defaults.slides],
     };
 
     this.index = 0;
