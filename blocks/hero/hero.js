@@ -5,7 +5,7 @@
 // eslint-disable-next-line object-curly-newline
 const DEFAULTS = {
   title: 'Leave a little different',
-  title2: '',
+  title2: "\u003Ch2 style=\"text-align: center;\"\u003EWelcome to Queensland\u003C/h2\u003E\r\n\u003Ch3 style=\"text-align: center;\"\u003E\u003Cb\u003E\u003Ci\u003E&quot;Wunya&quot; \u003C/i\u003Eand &quot;\u003Ci\u003Esew ngapa&quot;\u003C/i\u003E\u003C/b\u003E\u003C/h3\u003E\r\n\u003Cp style=\"text-align: center;\"\u003E\u003Ci\u003EWunya (welcome, greetings) is from the Yuggera language of Brisbane and the Gubbi Gubbi language of the Sunshine Coast. Sew ngapa (welcome) is from the Kala Lagaw Ya and Kala Kawaw Ya languages of the Western Torres Straits.\u003C/i\u003E\u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EOur garden's a one-million-year-old rainforest. Out the back is a red desert of dinosaur bones. Our swimming pool? The world's largest \u003Ca href=\"#anchor\"\u003Ereef. \u003C/a\u003E\u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EHere, you’ll find experiences like nowhere else on the planet. \u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EAfter months of only dreaming about holidays, now's the time to discover Queensland's vast and beautiful backyard. To reconnect with nature, ourselves and our loved ones in places we've never explored, through experiences that make us come alive. \u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003ESimply put - Queensland is Good to Go, and your \u003Ca title=\"queensland holiday deals\" href=\"https://www.queensland.com/au/en/plan-your-holiday/holiday-deals.html\" target=\"_self\"\u003Eholiday is waiting\u003C/a\u003E. \u003C/p\u003E\r\n",
   subtitle: 'Come as you are',
   icon: 'https://www.queens;and.com/content/dam/teq/consumer/global/icons/svg/Icon-Map-Queensland.svg',
   autoplay: 5000,
@@ -20,32 +20,32 @@ const DEFAULTS = {
   contentTileHeight: 0,
   breadcrumbItems: [],
   slides: [{
-      "mediaType": "damvideo",
-      "mediaProps": {
-        "fileFormat": "",
-        "sku": "",
-        "src": "https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_1920x960.mp4",
-        "duration": 0,
-        "poster": {
-          "src": null
-        },
-        "mobileSrc": "https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_9x16.mp4",
-        "title": "\u003Cp\u003EExperience Queensland's golden beaches, vibrant events, marine life, ancient rainforests, Indigenous cultures, expansive outback and the Great Barrier Reef.\u003C/p\u003E\r\n"
+    mediaType: 'damvideo',
+    mediaProps: {
+      fileFormat: '',
+      sku: '',
+      src: 'https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_1920x960.mp4',
+      duration: 0,
+      poster: {
+        src: null,
       },
-      "mediaPropsSlide": {
-        "slideTitle": null,
-        "slideSubtitle": null,
-        "slideIcon": {
-          "src": null,
-          "alt": null
-        },
-        "slideButton": {
-          "href": null,
-          "label": null,
-          "target": "_self"
-        }
-      }
-    }],
+      mobileSrc: 'https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_9x16.mp4',
+      title: "\u003Cp\u003EExperience Queensland's golden beaches, vibrant events, marine life, ancient rainforests, Indigenous cultures, expansive outback and the Great Barrier Reef.\u003C/p\u003E\r\n",
+    },
+    mediaPropsSlide: {
+      slideTitle: null,
+      slideSubtitle: null,
+      slideIcon: {
+        src: null,
+        alt: null,
+      },
+      slideButton: {
+        href: null,
+        label: null,
+        target: '_self',
+      },
+    },
+  }],
 };
 
 const SUPPORTED_EDS_KEYS = new Set([
@@ -67,7 +67,10 @@ const SUPPORTED_EDS_KEYS = new Set([
   'breadcrumbs',
 ]);
 
-function el(tag, { classes = [], attrs = {}, text = '', html = '' } = {}) {
+function el(tag, {
+  // eslint-disable-next-line no-shadow
+  classes = [], attrs = {}, text = '', html = '',
+} = {}) {
   const node = document.createElement(tag);
   if (classes.length) node.className = classes.join(' ');
   Object.entries(attrs).forEach(([k, v]) => {
@@ -166,7 +169,9 @@ function resolveMedia(raw) {
   if (typeof raw === 'string') {
     const src = raw.trim();
     if (!src) return null;
-    return { type: /\.(mp4|webm|ogg)(\?.*)?$/i.test(src) ? 'video' : 'image', src, alt: '', poster: '' };
+    return {
+      type: /\.(mp4|webm|ogg)(\?.*)?$/i.test(src) ? 'video' : 'image', src, alt: '', poster: '',
+    };
   }
   return {
     type: raw.type === 'video' ? 'video' : 'image',
@@ -210,8 +215,7 @@ function applyKv(config, key, valueCell) {
   else if (key === 'textshadow') config.textShadow = boolify(t, config.textShadow);
   else if (key === 'showplaypausebutton') config.showPlayPauseButton = boolify(t, config.showPlayPauseButton);
   else if (key === 'showcontenttile') config.showContentTile = boolify(t, config.showContentTile);
-  else if (key === 'contenttile') { config.contentTileHtml = h; config.showContentTile = true; }
-  else if (key === 'contenttileheight') config.contentTileHeight = numberify(t, config.contentTileHeight);
+  else if (key === 'contenttile') { config.contentTileHtml = h; config.showContentTile = true; } else if (key === 'contenttileheight') config.contentTileHeight = numberify(t, config.contentTileHeight);
   else if (key === 'breadcrumbs') config.breadcrumbItems = parseBreadcrumbs(t);
 }
 
@@ -234,8 +238,7 @@ function parseColonRow(row, config) {
   else if (key === 'textshadow') config.textShadow = boolify(value, config.textShadow);
   else if (key === 'showplaypausebutton') config.showPlayPauseButton = boolify(value, config.showPlayPauseButton);
   else if (key === 'showcontenttile') config.showContentTile = boolify(value, config.showContentTile);
-  else if (key === 'contenttile') { config.contentTileHtml = value; config.showContentTile = true; }
-  else if (key === 'contenttileheight') config.contentTileHeight = numberify(value, config.contentTileHeight);
+  else if (key === 'contenttile') { config.contentTileHtml = value; config.showContentTile = true; } else if (key === 'contenttileheight') config.contentTileHeight = numberify(value, config.contentTileHeight);
   else if (key === 'breadcrumbs') config.breadcrumbItems = parseBreadcrumbs(value);
   return true;
 }
@@ -248,9 +251,19 @@ function parseSlideRow(row, index) {
   const video = mediaCol.querySelector('video');
   const videoLink = mediaCol.querySelector('a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]');
   let media = null;
-  if (video) media = { type: 'video', src: video.currentSrc || video.src || '', alt: video.getAttribute('aria-label') || '', poster: video.poster || '' };
-  else if (videoLink) media = { type: 'video', src: videoLink.href, alt: videoLink.textContent.trim(), poster: row.dataset.poster || '' };
-  else if (image) media = { type: 'image', src: image.currentSrc || image.src || '', alt: image.alt || '', poster: '' };
+  if (video) {
+    media = {
+      type: 'video', src: video.currentSrc || video.src || '', alt: video.getAttribute('aria-label') || '', poster: video.poster || '',
+    };
+  } else if (videoLink) {
+    media = {
+      type: 'video', src: videoLink.href, alt: videoLink.textContent.trim(), poster: row.dataset.poster || '',
+    };
+  } else if (image) {
+    media = {
+      type: 'image', src: image.currentSrc || image.src || '', alt: image.alt || '', poster: '',
+    };
+  }
 
   return normalizeSlide({
     id: row.id || `slide-${index + 1}`,
@@ -317,6 +330,7 @@ class Modal {
     this.focused = null;
     this.keydown = (e) => { if (e.key === 'Escape' && this.isOpen()) this.close(); };
   }
+
   build() {
     if (this.root) return this.root;
     this.root = el('div', { classes: ['hero-banner-modal'], attrs: { hidden: 'hidden', 'aria-hidden': 'true' } });
@@ -331,6 +345,7 @@ class Modal {
     document.addEventListener('keydown', this.keydown);
     return this.root;
   }
+
   open(markup) {
     this.build();
     this.focused = document.activeElement;
@@ -340,6 +355,7 @@ class Modal {
     document.body.classList.add('hero-banner-modal-open');
     this.root.querySelector('.hero-banner-dialog-close')?.focus();
   }
+
   close() {
     if (!this.root) return;
     this.root.setAttribute('hidden', 'hidden');
@@ -348,6 +364,7 @@ class Modal {
     if (typeof this.onClose === 'function') this.onClose();
     this.focused?.focus?.();
   }
+
   isOpen() { return !!this.root && !this.root.hasAttribute('hidden'); }
 }
 
@@ -358,12 +375,18 @@ class SlideView {
     this.node = null;
     this.video = null;
   }
+
   build() {
     if (this.node) return this.node;
     this.node = el('article', { classes: ['hero-banner-slide'], attrs: { 'data-slide-index': this.index, 'aria-hidden': this.index === 0 ? 'false' : 'true' } });
     const media = el('div', { classes: ['hero-banner-media'] });
     if (this.slide.media?.type === 'video' && this.slide.media.src) {
-      const video = el('video', { classes: ['hero-banner-video'], attrs: { muted: 'muted', playsinline: 'playsinline', preload: 'metadata', loop: 'loop', 'aria-label': this.slide.media.alt || this.slide.heading || `Hero banner slide ${this.index + 1}` } });
+      const video = el('video', {
+        classes: ['hero-banner-video'],
+        attrs: {
+          muted: 'muted', playsinline: 'playsinline', preload: 'metadata', loop: 'loop', 'aria-label': this.slide.media.alt || this.slide.heading || `Hero banner slide ${this.index + 1}`,
+        },
+      });
       if (this.slide.media.poster) video.poster = this.slide.media.poster;
       video.append(el('source', { attrs: { src: this.slide.media.src } }));
       media.append(video);
@@ -378,18 +401,21 @@ class SlideView {
     this.node.append(media);
     return this.node;
   }
+
   activate() {
     if (!this.node) return;
     this.node.classList.add('is-active');
     this.node.setAttribute('aria-hidden', 'false');
     if (this.video) { this.video.currentTime = 0; this.video.play().catch(() => {}); }
   }
+
   deactivate() {
     if (!this.node) return;
     this.node.classList.remove('is-active');
     this.node.setAttribute('aria-hidden', 'true');
     this.video?.pause();
   }
+
   duration(fallback) {
     if (this.video && Number.isFinite(this.video.duration) && this.video.duration > 0) return Math.round(this.video.duration * 1000);
     return fallback;
@@ -643,6 +669,7 @@ class HeroBannerBlock {
   }
 
   next() { this.goTo(this.index + 1); }
+
   prev() { this.goTo(this.index - 1); }
 }
 
