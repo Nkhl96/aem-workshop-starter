@@ -1,4 +1,65 @@
 export default class HeaderMenu2 extends HTMLElement {
+  constructor() {
+    super();
+
+    // Authorable properties (safe fallbacks overridden by EDS block data)
+    this.enableV2 = true;
+    this.variation = 'transparent';
+    this.teqLogo = {
+      src: '',
+      alt: null,
+      link: null,
+      quality: 0.0,
+    };
+    this.teqLogoWhite = {
+      src: '',
+      alt: null,
+      link: null,
+      quality: 0.0,
+    };
+    this.searchResultsPage = '';
+    this.backText = 'Back';
+    this.cancelText = 'Cancel';
+    this.suggestedText = 'Suggested';
+    this.suggestText = this.suggestedText;
+    this.popularSearchesText = 'Popular search topics';
+    this.searchForText = 'Search For';
+    this.menuItems = [];
+    this.popularSearchTerms = [];
+    this.bookmarksLink = { href: '#' };
+
+    // Internal runtime defaults (required for the component to render)
+    this.headerHeight = 80;
+    this.maxItemsToShow = 5;
+
+    this.state = {
+      homeUrl: '/',
+      isScrolled: true,
+      isMenuOpen: false,
+      openAccordion: null,
+      hoveredIndex: null,
+      activeIndex: null,
+      showAllIndexes: {},
+      activeSearchBar: false,
+      isSearchModalOpen: false,
+      hasBookmarks: false,
+      isMobile: false,
+      isTransparentVariation: false,
+    };
+
+    // Refs
+    this.accordionRefs = [];
+    this.dialogRefs = [];
+    this.firstItemRef = null;
+    this.hamburgerRef = null;
+    this.mobileSearchTriggerRef = null;
+    this.lastDesktopTriggerRef = null;
+    this.wasMenuOpenRef = false;
+
+    // Scroll throttle
+    this.scrollTimeout = null;
+  }
+
   connectedCallback() {
     this.initializeComponent();
     this.render();
@@ -436,6 +497,12 @@ export default class HeaderMenu2 extends HTMLElement {
       searchComponent.id = 'nav-search';
       searchComponent.popularSearchTerms = this.popularSearchTerms;
       searchComponent.searchResultsPage = this.searchResultsPage;
+      searchComponent.backText = this.backText;
+      searchComponent.cancelText = this.cancelText;
+      searchComponent.suggestText = this.suggestText || this.suggestedText;
+      searchComponent.suggestedText = this.suggestText || this.suggestedText;
+      searchComponent.popularSearchesText = this.popularSearchesText;
+      searchComponent.searchForText = this.searchForText;
       searchWrapper.appendChild(searchComponent);
       iconGroup.appendChild(searchWrapper);
     }
