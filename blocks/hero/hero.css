@@ -157,7 +157,7 @@
   list-style: none;
   border-radius: 50%;
   background: var(--hero-banner-charcoal);
-  color: var(--hero-banner-sand);
+  color: #FFF;
 }
 
 .hero-banner-icon-button {

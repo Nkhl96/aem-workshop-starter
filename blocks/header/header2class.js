@@ -5,8 +5,8 @@ export default class HeaderMenu2 extends HTMLElement {
     // Authorable properties (safe fallbacks overridden by EDS block data)
     this.enableV2 = true;
     this.variation = 'transparent';
-    this.teqLogoSrc = '';
-    this.teqLogoWhiteSrc = '';
+    this.teqLogoSrc = 'https://queensland.com/content/dam/teq/consumer/global/logos/26Queensland_dark%20teal.svg';
+    this.teqLogoWhiteSrc = 'https://queensland.com/content/dam/teq/consumer/global/logos/26Queensland_white.svg';
     this.searchResultsPage = '';
     this.backText = 'Back';
     this.cancelText = 'Cancel';
