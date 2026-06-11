@@ -1,0 +1,60 @@
+{
+  "autoplay": 0,
+  "title": "Leave a little different",
+  "subTitle": "Come as you are",
+  "textShadow": true,
+  "showContentTile": true,
+  "contentTile": "\u003Ch2 style=\"text-align: center;\"\u003EWelcome to Queensland\u003C/h2\u003E\r\n\u003Ch3 style=\"text-align: center;\"\u003E\u003Cb\u003E\u003Ci\u003E&quot;Wunya&quot; \u003C/i\u003Eand &quot;\u003Ci\u003Esew ngapa&quot;\u003C/i\u003E\u003C/b\u003E\u003C/h3\u003E\r\n\u003Cp style=\"text-align: center;\"\u003E\u003Ci\u003EWunya (welcome, greetings) is from the Yuggera language of Brisbane and the Gubbi Gubbi language of the Sunshine Coast. Sew ngapa (welcome) is from the Kala Lagaw Ya and Kala Kawaw Ya languages of the Western Torres Straits.\u003C/i\u003E\u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EOur garden's a one-million-year-old rainforest. Out the back is a red desert of dinosaur bones. Our swimming pool? The world's largest \u003Ca href=\"#anchor\"\u003Ereef. \u003C/a\u003E\u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EHere, you’ll find experiences like nowhere else on the planet. \u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003EAfter months of only dreaming about holidays, now's the time to discover Queensland's vast and beautiful backyard. To reconnect with nature, ourselves and our loved ones in places we've never explored, through experiences that make us come alive. \u003C/p\u003E\r\n\u003Cp style=\"text-align: center;\"\u003ESimply put - Queensland is Good to Go, and your \u003Ca title=\"queensland holiday deals\" href=\"https://www.queensland.com/au/en/plan-your-holiday/holiday-deals.html\" target=\"_self\"\u003Eholiday is waiting\u003C/a\u003E. \u003C/p\u003E\r\n",
+  "contentTileHeight": 0,
+  "showPlayPauseButton": true,
+  "layoutVariation": "fullWidth",
+  "height": 100,
+  "headlineColor": "#F83458",
+  "componentID": "category-hero-banner_1849055139_Homepage Hero Banner",
+  "breadcrumbItems": [
+    {
+      "active": true,
+      "title": "Home",
+      "url": "/content/teq/au/en/home.html"
+    },
+    {
+      "active": true,
+      "title": "Home backup",
+      "url": "/content/teq/au/en/home2.html"
+    }
+  ],
+  "icon": {
+    "src": "/content/dam/teq/consumer/global/icons/svg/Icon-Map-Queensland.svg",
+    "alt": "Queensland Australia"
+  },
+  "slides": [
+    {
+      "mediaType": "damvideo",
+      "mediaProps": {
+        "fileFormat": "",
+        "sku": "",
+        "src": "https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_1920x960.mp4",
+        "duration": 0,
+        "poster": {
+          "src": null
+        },
+        "mobileSrc": "https://s7ap1.scene7.com/is/content/destqueenslandstage/teq/consumer/global/videos/homepage/2020_TEQ_Homepage_ProjectCaboodle_BoardHVT_Montages_9x16.mp4",
+        "title": "\u003Cp\u003EExperience Queensland's golden beaches, vibrant events, marine life, ancient rainforests, Indigenous cultures, expansive outback and the Great Barrier Reef.\u003C/p\u003E\r\n"
+      },
+      "mediaPropsSlide": {
+        "slideTitle": null,
+        "slideSubtitle": null,
+        "slideIcon": {
+          "src": null,
+          "alt": null
+        },
+        "slideButton": {
+          "href": null,
+          "label": null,
+          "target": "_self"
+        }
+      }
+    }
+  ],
+  ":type": "teq/components/category/category-hero-banner"
+}
