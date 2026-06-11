@@ -56,12 +56,6 @@ const DEFAULTS = {
   slides: [
     {
       id: 'slide-1',
-      eyebrow: '',
-      heading: '',
-      heading2: '',
-      body: '',
-      ctaText: '',
-      ctaHref: '',
       infoHtml: `
         <p>
           Experience Queensland's golden beaches, vibrant events, marine life,

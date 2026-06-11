@@ -108,7 +108,7 @@
 .hero-banner-subtitle,
 .hero-banner-title {
   display: block;
-  color: var(--hero-banner-foreground);
+  color: #FFF;
 }
 
 .hero-banner-subtitle {
