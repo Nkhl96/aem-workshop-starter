@@ -2,36 +2,46 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-classes-per-file */
-function createElement(tag, {
-  classes = [], attrs = {}, html = '', text = '',
-} = {}) {
+// eslint-disable-next-line object-curly-newline
+function createElement(tag, { classes = [], attrs = {}, html = '', text = '' } = {}) {
   const el = document.createElement(tag);
-  if (classes.length) el.className = classes.join(' ');
+
+  if (classes.length) {
+    el.className = classes.join(' ');
+  }
+
   Object.entries(attrs).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
       el.setAttribute(key, String(value));
     }
   });
-  if (html) el.innerHTML = html;
-  if (text) el.textContent = text;
+
+  if (html) {
+    el.innerHTML = html;
+  }
+
+  if (text) {
+    el.textContent = text;
+  }
+
   return el;
 }
 
-function toBoolean(value, defaultValue = false) {
-  if (value === undefined || value === null || value === '') return defaultValue;
-  if (typeof value === 'boolean') return value;
+function toBoolean(value, fallback = false) {
+  if (value === undefined || value === null || value === '') {
+    return fallback;
+  }
+
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
   return ['true', '1', 'yes', 'y', 'on'].includes(String(value).trim().toLowerCase());
 }
 
-function toNumber(value, defaultValue) {
+function toNumber(value, fallback) {
   const num = Number(value);
-  return Number.isFinite(num) ? num : defaultValue;
-}
-
-function stripHtml(value = '') {
-  const tmp = document.createElement('div');
-  tmp.innerHTML = value;
-  return tmp.textContent || tmp.innerText || '';
+  return Number.isFinite(num) ? num : fallback;
 }
 
 function containsHtml(value = '') {
@@ -40,6 +50,7 @@ function containsHtml(value = '') {
 
 function debounce(fn, delay = 100) {
   let timer = null;
+
   return (...args) => {
     window.clearTimeout(timer);
     timer = window.setTimeout(() => fn(...args), delay);
@@ -53,33 +64,94 @@ function getDirectChildren(node) {
 function safeJsonParse(value, fallback = null) {
   try {
     return JSON.parse(value);
-  } catch (e) {
+  } catch (error) {
     return fallback;
   }
 }
 
-function parseConfigRow(text) {
-  const normalized = text.replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, '');
-  const parts = normalized.split(':');
-  if (parts.length < 2) return null;
+function parseLabelValue(text) {
+  const parts = text.split(':');
+
+  if (parts.length < 2) {
+    return null;
+  }
+
   const key = parts.shift().trim();
   const value = parts.join(':').trim();
-  if (!key) return null;
-  return { key, value };
+
+  if (!key) {
+    return null;
+  }
+
+  return { key: key.toLowerCase(), value };
+}
+
+function normalizeKey(key = '') {
+  return key
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
+function getCellText(cell) {
+  return (cell?.textContent || '').trim();
+}
+
+function getCellHtml(cell) {
+  return (cell?.innerHTML || '').trim();
+}
+
+function getCellAsset(cell) {
+  if (!cell) {
+    return '';
+  }
+
+  const image = cell.querySelector('img');
+  if (image) {
+    return image.currentSrc || image.src || image.getAttribute('src') || '';
+  }
+
+  const pictureImage = cell.querySelector('picture img');
+  if (pictureImage) {
+    return pictureImage.currentSrc || pictureImage.src || pictureImage.getAttribute('src') || '';
+  }
+
+  const link = cell.querySelector('a[href]');
+  if (link) {
+    return link.href || link.getAttribute('href') || '';
+  }
+
+  return getCellText(cell);
+}
+
+function parseBreadcrumbText(value) {
+  return value
+    .split('|')
+    .map((item) => {
+      const [label, href] = item.split(',').map((part) => part.trim());
+      return { label, href: href || '' };
+    })
+    .filter((item) => item.label);
 }
 
 function normalizeMedia(rawMedia) {
-  if (!rawMedia) return null;
+  if (!rawMedia) {
+    return null;
+  }
+
   if (typeof rawMedia === 'string') {
-    const path = rawMedia.trim();
-    if (!path) return null;
-    const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(path);
+    const src = rawMedia.trim();
+
+    if (!src) {
+      return null;
+    }
+
     return {
-      type: isVideo ? 'video' : 'image',
-      src: path,
+      type: /\.(mp4|webm|ogg)(\?.*)?$/i.test(src) ? 'video' : 'image',
+      src,
       alt: '',
       poster: '',
-      titleHtml: '',
     };
   }
 
@@ -88,50 +160,194 @@ function normalizeMedia(rawMedia) {
     src: rawMedia.src || rawMedia.path || rawMedia.url || '',
     alt: rawMedia.alt || rawMedia.title || '',
     poster: rawMedia.poster || '',
-    titleHtml: rawMedia.titleHtml || rawMedia.title || '',
   };
 }
 
 function normalizeSlide(rawSlide = {}, index = 0) {
-  const media = normalizeMedia(rawSlide.media || rawSlide.mediaProps || rawSlide.asset || rawSlide.image || rawSlide.video || rawSlide.src);
   return {
     id: rawSlide.id || `slide-${index + 1}`,
-    eyebrow: rawSlide.eyebrow || rawSlide.subTitle || rawSlide.subtitle || '',
+    eyebrow: rawSlide.eyebrow || rawSlide.subtitle || rawSlide.subTitle || '',
     heading: rawSlide.heading || rawSlide.title || rawSlide.headline || '',
     heading2: rawSlide.heading2 || rawSlide.title2 || '',
     body: rawSlide.body || rawSlide.description || rawSlide.copy || '',
     ctaText: rawSlide.ctaText || rawSlide.linkText || '',
-    ctaHref: rawSlide.ctaHref || rawSlide.link || rawSlide.href || '',
+    ctaHref: rawSlide.ctaHref || rawSlide.href || rawSlide.link || '',
     infoHtml: rawSlide.infoHtml || rawSlide.mediaProps?.title || rawSlide.mediaTitle || '',
-    media,
+    media: normalizeMedia(rawSlide.media || rawSlide.mediaProps || rawSlide.asset || rawSlide.image || rawSlide.video || rawSlide.src),
   };
 }
 
 function parseJsonConfig(block) {
   const script = block.querySelector('script[type="application/json"]');
-  if (!script) return null;
-  const data = safeJsonParse(script.textContent, null);
-  if (!data) return null;
 
-  const slides = Array.isArray(data.slides) ? data.slides.map(normalizeSlide) : [];
+  if (!script) {
+    return null;
+  }
+
+  const data = safeJsonParse(script.textContent, null);
+
+  if (!data) {
+    return null;
+  }
+
   return {
     title: data.title || '',
     title2: data.title2 || '',
     subtitle: data.subtitle || data.subTitle || '',
     icon: data.icon || '',
     autoplay: toNumber(data.autoplay, 5000),
-    heightRatio: toNumber(data.heightRatio ?? data.height, 1),
+    heightRatio: Math.max(0.2, toNumber(data.heightRatio ?? data.height, 0.7)),
     minHeight: toNumber(data.minHeight, 420),
     color: data.color || '',
     headlineColor: data.headlineColor || '',
     textShadow: toBoolean(data.textShadow, false),
     showPlayPauseButton: toBoolean(data.showPlayPauseButton, true),
-    showContentTile: toBoolean(data.showContentTile, Boolean(data.contentTileHtml)),
+    showContentTile: toBoolean(data.showContentTile, Boolean(data.contentTileHtml || data.contentTile)),
     contentTileHtml: data.contentTileHtml || data.contentTile || '',
     contentTileHeight: toNumber(data.contentTileHeight, 0),
     breadcrumbItems: Array.isArray(data.breadcrumbItems) ? data.breadcrumbItems : [],
-    slides,
+    slides: Array.isArray(data.slides) ? data.slides.map(normalizeSlide).filter((slide) => slide.media?.src) : [],
   };
+}
+
+const SUPPORTED_EDS_KEYS = new Set([
+  'title',
+  'title2',
+  'subtitle',
+  'subtitle2',
+  'icon',
+  'autoplay',
+  'height',
+  'heightratio',
+  'minheight',
+  'color',
+  'headlinecolor',
+  'textshadow',
+  'showplaypausebutton',
+  'showcontenttile',
+  'contenttile',
+  'contenttileheight',
+  'breadcrumbs',
+]);
+
+function isEdsKeyValueRow(row) {
+  const cells = getDirectChildren(row);
+
+  if (cells.length < 2) {
+    return false;
+  }
+
+  const key = normalizeKey(getCellText(cells[0]));
+  return SUPPORTED_EDS_KEYS.has(key);
+}
+
+function applyConfigValue(config, key, valueCell) {
+  const textValue = getCellText(valueCell);
+  const htmlValue = getCellHtml(valueCell);
+
+  if (key === 'title') {
+    config.title = textValue;
+  } else if (key === 'title2') {
+    config.title2 = textValue;
+  } else if (key === 'subtitle') {
+    config.subtitle = textValue;
+  } else if (key === 'icon') {
+    config.icon = getCellAsset(valueCell);
+  } else if (key === 'autoplay') {
+    config.autoplay = toNumber(textValue, config.autoplay);
+  } else if (key === 'height' || key === 'heightratio') {
+    config.heightRatio = Math.max(0.2, toNumber(textValue, config.heightRatio));
+  } else if (key === 'minheight') {
+    config.minHeight = toNumber(textValue, config.minHeight);
+  } else if (key === 'color') {
+    config.color = textValue;
+  } else if (key === 'headlinecolor') {
+    config.headlineColor = textValue;
+  } else if (key === 'textshadow') {
+    config.textShadow = toBoolean(textValue, config.textShadow);
+  } else if (key === 'showplaypausebutton') {
+    config.showPlayPauseButton = toBoolean(textValue, config.showPlayPauseButton);
+  } else if (key === 'showcontenttile') {
+    config.showContentTile = toBoolean(textValue, config.showContentTile);
+  } else if (key === 'contenttile') {
+    config.contentTileHtml = htmlValue;
+    config.showContentTile = true;
+  } else if (key === 'contenttileheight') {
+    config.contentTileHeight = toNumber(textValue, config.contentTileHeight);
+  } else if (key === 'breadcrumbs') {
+    config.breadcrumbItems = parseBreadcrumbText(textValue);
+  }
+}
+
+function parseEdsKeyValueRows(rows, config) {
+  const consumedRows = new Set();
+
+  rows.forEach((row) => {
+    if (!isEdsKeyValueRow(row)) {
+      return;
+    }
+
+    const cells = getDirectChildren(row);
+    const key = normalizeKey(getCellText(cells[0]));
+    const valueCell = cells[1];
+
+    applyConfigValue(config, key, valueCell);
+    consumedRows.add(row);
+  });
+
+  return consumedRows;
+}
+
+function parseSlideRow(row, index = 0) {
+  const columns = getDirectChildren(row);
+  const mediaColumn = columns.find((col) => col.querySelector('picture, img, video, a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]')) || columns[0] || row;
+  const contentColumn = columns.find((col) => col !== mediaColumn) || row;
+
+  const image = mediaColumn.querySelector('img');
+  const video = mediaColumn.querySelector('video');
+  const videoLink = mediaColumn.querySelector('a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]');
+  const subtitleNode = contentColumn.querySelector('[data-subtitle], h5, h6, .subtitle, .eyebrow');
+  const titleNode = contentColumn.querySelector('[data-title], h1, h2, h3, h4, .title, .heading');
+  const title2Node = contentColumn.querySelector('[data-title2], .title-2');
+  const bodyNode = contentColumn.querySelector('[data-body], p');
+  const linkNode = contentColumn.querySelector('a[href]');
+
+  let media = null;
+
+  if (video) {
+    media = {
+      type: 'video',
+      src: video.currentSrc || video.src || '',
+      alt: video.getAttribute('aria-label') || '',
+      poster: video.poster || '',
+    };
+  } else if (videoLink) {
+    media = {
+      type: 'video',
+      src: videoLink.href,
+      alt: videoLink.textContent.trim(),
+      poster: row.dataset.poster || '',
+    };
+  } else if (image) {
+    media = {
+      type: 'image',
+      src: image.currentSrc || image.src || '',
+      alt: image.alt || '',
+      poster: '',
+    };
+  }
+
+  return normalizeSlide({
+    id: row.id || `slide-${index + 1}`,
+    subtitle: row.dataset.subtitle || subtitleNode?.textContent?.trim() || '',
+    title: row.dataset.title || titleNode?.textContent?.trim() || '',
+    title2: row.dataset.title2 || title2Node?.textContent?.trim() || '',
+    body: row.dataset.body || bodyNode?.innerHTML?.trim() || '',
+    ctaText: row.dataset.ctaText || linkNode?.textContent?.trim() || '',
+    ctaHref: row.dataset.ctaHref || linkNode?.href || '',
+    infoHtml: row.dataset.infoHtml || row.dataset.info || '',
+    media,
+  }, index);
 }
 
 function parseDomConfig(block) {
@@ -142,129 +358,81 @@ function parseDomConfig(block) {
     subtitle: block.dataset.subtitle || '',
     icon: block.dataset.icon || '',
     autoplay: toNumber(block.dataset.autoplay, 5000),
-    heightRatio: toNumber(block.dataset.heightRatio || block.dataset.height, 1),
+    heightRatio: Math.max(0.2, toNumber(block.dataset.heightRatio || block.dataset.height, 0.7)),
     minHeight: toNumber(block.dataset.minHeight, 420),
     color: block.dataset.color || '',
     headlineColor: block.dataset.headlineColor || '',
     textShadow: toBoolean(block.dataset.textShadow, false),
     showPlayPauseButton: toBoolean(block.dataset.showPlayPauseButton, true),
-    showContentTile: false,
+    showContentTile: toBoolean(block.dataset.showContentTile, false),
     contentTileHtml: '',
     contentTileHeight: toNumber(block.dataset.contentTileHeight, 0),
     breadcrumbItems: [],
     slides: [],
   };
 
-  const explicitSlides = rows.filter((row) => row.classList.contains('hero-banner-slide') || row.dataset.slide !== undefined);
-  if (explicitSlides.length) {
-    config.slides = explicitSlides.map((row, index) => parseSlideRow(row, index));
-  } else {
-    rows.forEach((row) => {
-      const rowText = row.textContent.trim();
-      const rowHtml = row.innerHTML.trim();
-      const parsed = parseConfigRow(rowText);
-      if (parsed) {
-        const key = parsed.key.toLowerCase();
-        const { value } = parsed;
-        if (key === 'title') config.title = value;
-        else if (key === 'title2') config.title2 = value;
-        else if (key === 'subtitle' || key === 'subTitle'.toLowerCase()) config.subtitle = value;
-        else if (key === 'icon') config.icon = value;
-        else if (key === 'autoplay') config.autoplay = toNumber(value, config.autoplay);
-        else if (key === 'height' || key === 'heightratio') config.heightRatio = toNumber(value, config.heightRatio);
-        else if (key === 'minheight') config.minHeight = toNumber(value, config.minHeight);
-        else if (key === 'color') config.color = value;
-        else if (key === 'headlinecolor') config.headlineColor = value;
-        else if (key === 'textshadow') config.textShadow = toBoolean(value, config.textShadow);
-        else if (key === 'showplaypausebutton') config.showPlayPauseButton = toBoolean(value, config.showPlayPauseButton);
-        else if (key === 'contenttile') {
-          config.contentTileHtml = value;
-          config.showContentTile = true;
-        } else if (key === 'contenttileheight') config.contentTileHeight = toNumber(value, config.contentTileHeight);
-        else if (key === 'breadcrumbs') {
-          config.breadcrumbItems = value.split('|').map((item) => {
-            const [label, href] = item.split(',').map((part) => part.trim());
-            return { label, href: href || '' };
-          }).filter((item) => item.label);
-        }
-      }
-    });
+  const consumedRows = parseEdsKeyValueRows(rows, config);
 
-    config.slides = rows.filter((row) => row.querySelector('picture, img, video, a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]')).map((row, index) => parseSlideRow(row, index));
-  }
+  rows.forEach((row) => {
+    if (consumedRows.has(row)) {
+      return;
+    }
+
+    const labelValue = parseLabelValue(row.textContent.trim());
+
+    if (!labelValue) {
+      return;
+    }
+
+    const { key, value } = labelValue;
+
+    if (key === 'title') config.title = value;
+    else if (key === 'title2') config.title2 = value;
+    else if (key === 'subtitle') config.subtitle = value;
+    else if (key === 'icon') config.icon = value;
+    else if (key === 'autoplay') config.autoplay = toNumber(value, config.autoplay);
+    else if (key === 'height' || key === 'heightratio') config.heightRatio = Math.max(0.2, toNumber(value, config.heightRatio));
+    else if (key === 'minheight') config.minHeight = toNumber(value, config.minHeight);
+    else if (key === 'color') config.color = value;
+    else if (key === 'headlinecolor') config.headlineColor = value;
+    else if (key === 'textshadow') config.textShadow = toBoolean(value, config.textShadow);
+    else if (key === 'showplaypausebutton') config.showPlayPauseButton = toBoolean(value, config.showPlayPauseButton);
+    else if (key === 'showcontenttile') config.showContentTile = toBoolean(value, config.showContentTile);
+    else if (key === 'contenttile') {
+      config.contentTileHtml = value;
+      config.showContentTile = true;
+    } else if (key === 'contenttileheight') {
+      config.contentTileHeight = toNumber(value, config.contentTileHeight);
+    } else if (key === 'breadcrumbs') {
+      config.breadcrumbItems = parseBreadcrumbText(value);
+    }
+  });
+
+  config.slides = rows
+    .filter((row) => !consumedRows.has(row))
+    .filter((row) => row.querySelector('picture, img, video, a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]'))
+    .map((row, index) => parseSlideRow(row, index))
+    .filter((slide) => slide.media?.src);
 
   return config;
-}
-
-function parseSlideRow(row, index = 0) {
-  const columns = getDirectChildren(row);
-  const mediaCol = columns.find((col) => col.querySelector('picture, img, video')) || columns[0] || row;
-  const contentCol = columns.find((col) => col !== mediaCol) || row;
-
-  const picture = mediaCol.querySelector('picture');
-  const image = mediaCol.querySelector('img');
-  const video = mediaCol.querySelector('video');
-  const videoLink = mediaCol.querySelector('a[href$=".mp4"], a[href$=".webm"], a[href$=".ogg"]');
-
-  let media = null;
-  if (video) {
-    media = {
-      type: 'video',
-      src: video.currentSrc || video.src || '',
-      poster: video.poster || '',
-      alt: video.getAttribute('aria-label') || '',
-      titleHtml: row.dataset.info || '',
-    };
-  } else if (videoLink) {
-    media = {
-      type: 'video',
-      src: videoLink.href,
-      poster: row.dataset.poster || '',
-      alt: videoLink.textContent.trim(),
-      titleHtml: row.dataset.info || '',
-    };
-  } else if (picture || image) {
-    media = {
-      type: 'image',
-      src: image ? (image.currentSrc || image.src || '') : '',
-      alt: image?.alt || '',
-      poster: '',
-      titleHtml: row.dataset.info || '',
-    };
-  }
-
-  const subtitleNode = contentCol.querySelector('[data-subtitle], h5, h6, .subtitle, .eyebrow');
-  const titleNode = contentCol.querySelector('[data-title], h1, h2, h3, h4, .title, .heading');
-  const title2Node = titleNode?.nextElementSibling?.matches('h1, h2, h3, h4, .title, .heading') ? titleNode.nextElementSibling : contentCol.querySelector('[data-title2], .title-2');
-  const bodyNode = contentCol.querySelector('p, .body, [data-body]');
-  const linkNode = contentCol.querySelector('a[href]');
-
-  return normalizeSlide({
-    id: row.id || `slide-${index + 1}`,
-    subtitle: row.dataset.subtitle || subtitleNode?.textContent?.trim() || '',
-    title: row.dataset.title || titleNode?.textContent?.trim() || '',
-    title2: row.dataset.title2 || title2Node?.textContent?.trim() || '',
-    body: row.dataset.body || bodyNode?.innerHTML?.trim() || '',
-    ctaText: row.dataset.ctaText || linkNode?.textContent?.trim() || '',
-    ctaHref: row.dataset.ctaHref || linkNode?.href || '',
-    infoHtml: row.dataset.infoHtml || row.dataset.info || media?.titleHtml || '',
-    media,
-  }, index);
 }
 
 class HeroBannerModal {
   constructor(onClose) {
     this.onClose = onClose;
     this.root = null;
-    this.content = null;
+    this.body = null;
     this.previouslyFocused = null;
+    this.keyHandler = this.handleKeyDown.bind(this);
   }
 
   build() {
-    if (this.root) return this.root;
+    if (this.root) {
+      return this.root;
+    }
 
     this.root = createElement('div', {
-      classes: ['hero-banner__modal'],
+      classes: ['hero-banner-modal'],
       attrs: {
         hidden: 'hidden',
         'aria-hidden': 'true',
@@ -272,7 +440,7 @@ class HeroBannerModal {
     });
 
     const dialog = createElement('div', {
-      classes: ['hero-banner__dialog'],
+      classes: ['hero-banner-dialog'],
       attrs: {
         role: 'dialog',
         'aria-modal': 'true',
@@ -281,48 +449,61 @@ class HeroBannerModal {
     });
 
     const close = createElement('button', {
-      classes: ['hero-banner__dialog-close'],
-      attrs: { type: 'button', 'aria-label': 'Close additional information' },
+      classes: ['hero-banner-dialog-close'],
+      attrs: {
+        type: 'button',
+        'aria-label': 'Close additional information',
+      },
       text: '×',
     });
 
-    this.content = createElement('div', { classes: ['hero-banner__dialog-body'] });
+    this.body = createElement('div', { classes: ['hero-banner-dialog-body'] });
+
     close.addEventListener('click', () => this.close());
     this.root.addEventListener('click', (event) => {
-      if (event.target === this.root) this.close();
+      if (event.target === this.root) {
+        this.close();
+      }
     });
 
-    dialog.append(close, this.content);
+    dialog.append(close, this.body);
     this.root.append(dialog);
     document.body.append(this.root);
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && this.isOpen()) this.close();
-    });
+    document.addEventListener('keydown', this.keyHandler);
 
     return this.root;
+  }
+
+  handleKeyDown(event) {
+    if (event.key === 'Escape' && this.isOpen()) {
+      this.close();
+    }
   }
 
   open(html) {
     this.build();
     this.previouslyFocused = document.activeElement;
-    this.content.innerHTML = html;
+    this.body.innerHTML = html;
     this.root.removeAttribute('hidden');
     this.root.setAttribute('aria-hidden', 'false');
     document.body.classList.add('hero-banner-modal-open');
-    const closeButton = this.root.querySelector('.hero-banner__dialog-close');
-    if (closeButton) closeButton.focus();
+    this.root.querySelector('.hero-banner-dialog-close')?.focus();
   }
 
   close() {
-    if (!this.root) return;
+    if (!this.root) {
+      return;
+    }
+
     this.root.setAttribute('hidden', 'hidden');
     this.root.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('hero-banner-modal-open');
-    if (typeof this.onClose === 'function') this.onClose();
-    if (this.previouslyFocused && this.previouslyFocused.focus) {
-      this.previouslyFocused.focus();
+
+    if (typeof this.onClose === 'function') {
+      this.onClose();
     }
+
+    this.previouslyFocused?.focus?.();
   }
 
   isOpen() {
@@ -330,7 +511,7 @@ class HeroBannerModal {
   }
 }
 
-class HeroBannerSlideView {
+class HeroBannerSlide {
   constructor(slide, index) {
     this.slide = slide;
     this.index = index;
@@ -339,21 +520,23 @@ class HeroBannerSlideView {
   }
 
   build() {
-    if (this.element) return this.element;
+    if (this.element) {
+      return this.element;
+    }
 
     const article = createElement('article', {
-      classes: ['hero-banner__slide'],
+      classes: ['hero-banner-slide'],
       attrs: {
         'data-slide-index': this.index,
         'aria-hidden': this.index === 0 ? 'false' : 'true',
       },
     });
 
-    const mediaWrap = createElement('div', { classes: ['hero-banner__media'] });
+    const media = createElement('div', { classes: ['hero-banner-media'] });
 
     if (this.slide.media?.type === 'video' && this.slide.media.src) {
       const video = createElement('video', {
-        classes: ['hero-banner__video'],
+        classes: ['hero-banner-video'],
         attrs: {
           muted: 'muted',
           playsinline: 'playsinline',
@@ -362,55 +545,67 @@ class HeroBannerSlideView {
           'aria-label': this.slide.media.alt || this.slide.heading || `Hero banner slide ${this.index + 1}`,
         },
       });
-      if (this.slide.media.poster) video.poster = this.slide.media.poster;
-      const source = createElement('source', { attrs: { src: this.slide.media.src } });
-      video.append(source);
-      mediaWrap.append(video);
+
+      if (this.slide.media.poster) {
+        video.poster = this.slide.media.poster;
+      }
+
+      video.append(createElement('source', { attrs: { src: this.slide.media.src } }));
+      media.append(video);
       this.video = video;
     } else if (this.slide.media?.src) {
-      const picture = createElement('picture', { classes: ['hero-banner__picture'] });
-      const img = createElement('img', {
-        classes: ['hero-banner__image'],
+      const picture = createElement('picture', { classes: ['hero-banner-picture'] });
+      picture.append(createElement('img', {
+        classes: ['hero-banner-image'],
         attrs: {
           src: this.slide.media.src,
           alt: this.slide.media.alt || this.slide.heading || `Hero banner slide ${this.index + 1}`,
           loading: this.index === 0 ? 'eager' : 'lazy',
         },
-      });
-      picture.append(img);
-      mediaWrap.append(picture);
+      }));
+      media.append(picture);
     } else {
-      mediaWrap.append(createElement('div', { classes: ['hero-banner__placeholder'] }));
+      media.append(createElement('div', { classes: ['hero-banner-placeholder'] }));
     }
 
-    article.append(mediaWrap);
+    article.append(media);
     this.element = article;
     return article;
   }
 
   activate() {
-    if (!this.element) return;
+    if (!this.element) {
+      return;
+    }
+
     this.element.classList.add('is-active');
     this.element.setAttribute('aria-hidden', 'false');
+
     if (this.video) {
       this.video.currentTime = 0;
-      this.video.play().catch(() => { });
+      this.video.play().catch(() => {});
     }
   }
 
   deactivate() {
-    if (!this.element) return;
+    if (!this.element) {
+      return;
+    }
+
     this.element.classList.remove('is-active');
     this.element.setAttribute('aria-hidden', 'true');
-    if (this.video) this.video.pause();
+    this.video?.pause();
   }
 
   getDuration(fallbackMs) {
-    if (!this.video) return fallbackMs;
-    const durationSec = this.video.duration;
-    if (Number.isFinite(durationSec) && durationSec > 0) {
-      return Math.round(durationSec * 1000);
+    if (!this.video) {
+      return fallbackMs;
     }
+
+    if (Number.isFinite(this.video.duration) && this.video.duration > 0) {
+      return Math.round(this.video.duration * 1000);
+    }
+
     return fallbackMs;
   }
 }
@@ -422,40 +617,42 @@ class HeroBannerBlock {
     this.currentIndex = 0;
     this.progress = 0.001;
     this.paused = false;
-    this.interval = null;
-    this.progressInterval = null;
+    this.advanceTimer = null;
+    this.progressTimer = null;
     this.slides = [];
     this.modal = new HeroBannerModal(() => this.resume());
     this.playPauseButton = null;
     this.infoButton = null;
     this.liveRegion = null;
-    this.overlayTitle = null;
     this.overlaySubtitle = null;
+    this.overlayTitle = null;
     this.overlayTitle2 = null;
-    this.slideStage = null;
-    this.contentTile = null;
     this.actions = null;
     this.resizeHandler = debounce(() => this.applyHeight(), 100);
   }
 
   init() {
-    this.config.slides = (this.config.slides || []).filter((slide) => slide && slide.media && slide.media.src);
+    this.config.slides = (this.config.slides || []).filter((slide) => slide.media?.src);
+
     if (!this.config.slides.length) {
       this.block.innerHTML = '';
-      this.block.classList.add('hero-banner', 'hero-banner--empty');
+      this.block.classList.add('hero-banner', 'hero-banner-empty');
       return;
     }
 
     this.render();
     this.bind();
     this.goTo(0, { silent: true });
-    const firstDuration = this.getActiveSlideDuration();
-    const shouldAutoplay = (this.slides.length > 1 || this.hasVideoSlides()) && this.config.showPlayPauseButton;
-    if (shouldAutoplay) {
-      this.start(firstDuration);
+
+    if (this.shouldShowPlayback()) {
+      this.start(this.getActiveDuration());
     } else {
       this.pause(true);
     }
+  }
+
+  shouldShowPlayback() {
+    return this.config.showPlayPauseButton && (this.slides.length > 1 || this.slides.some((slide) => Boolean(slide.video)));
   }
 
   render() {
@@ -463,7 +660,7 @@ class HeroBannerBlock {
     this.block.classList.add('hero-banner');
 
     const root = createElement('section', {
-      classes: ['hero-banner__root'],
+      classes: ['hero-banner-root'],
       attrs: {
         id: 'hero-banner-slider',
         'aria-label': 'Hero banner slider',
@@ -471,86 +668,104 @@ class HeroBannerBlock {
       },
     });
 
-    const carouselWrapper = createElement('div', { classes: ['hero-banner__carousel-wrapper'] });
-    this.slideStage = createElement('div', {
-      classes: ['hero-banner__stage'],
-      attrs: { role: 'region', 'aria-roledescription': 'carousel', 'aria-label': 'Hero banner slides' },
+    const wrapper = createElement('div', { classes: ['hero-banner-carousel-wrapper'] });
+    const stage = createElement('div', {
+      classes: ['hero-banner-stage'],
+      attrs: {
+        role: 'region',
+        'aria-roledescription': 'carousel',
+        'aria-label': 'Hero banner slides',
+      },
     });
 
     this.slides = this.config.slides.map((slide, index) => {
-      const view = new HeroBannerSlideView(slide, index);
-      this.slideStage.append(view.build());
+      const view = new HeroBannerSlide(slide, index);
+      stage.append(view.build());
       return view;
     });
 
-    const overlay = createElement('div', { classes: ['hero-banner__overlay'] });
-    const gradient = createElement('div', { classes: ['hero-banner__gradient'] });
+    const overlay = createElement('div', { classes: ['hero-banner-overlay'] });
+    const gradient = createElement('div', { classes: ['hero-banner-gradient'] });
     const content = createElement('div', {
-      classes: ['hero-banner__content', this.hasBannerTitle() ? '' : 'hero-banner__content--no-title'].filter(Boolean),
+      classes: ['hero-banner-content', !this.config.title ? 'hero-banner-content-no-title' : ''].filter(Boolean),
     });
 
     if (this.config.icon) {
-      const iconWrap = createElement('span', { classes: ['hero-banner__icon'] });
-      const iconImage = createElement('img', {
-        classes: ['hero-banner__icon-image'],
-        attrs: { src: this.config.icon, alt: '', loading: 'eager' },
-      });
-      iconWrap.append(iconImage);
-      content.append(iconWrap);
+      const icon = createElement('span', { classes: ['hero-banner-icon'] });
+      icon.append(createElement('img', {
+        classes: ['hero-banner-icon-image'],
+        attrs: {
+          src: this.config.icon,
+          alt: '',
+          loading: 'eager',
+        },
+      }));
+      content.append(icon);
     }
 
-    const headingWrap = createElement('div', { classes: ['hero-banner__heading-group'] });
+    const group = createElement('div', { classes: ['hero-banner-heading-group'] });
     this.overlaySubtitle = createElement('span', {
-      classes: ['hero-banner__subtitle', this.config.textShadow ? 'hero-banner__text-shadow' : ''].filter(Boolean),
+      classes: ['hero-banner-subtitle', this.config.textShadow ? 'hero-banner-text-shadow' : ''].filter(Boolean),
       text: this.config.subtitle,
     });
     this.overlayTitle = createElement('span', {
-      classes: ['hero-banner__title', this.config.textShadow ? 'hero-banner__text-shadow' : ''].filter(Boolean),
+      classes: ['hero-banner-title', this.config.textShadow ? 'hero-banner-text-shadow' : ''].filter(Boolean),
       text: this.config.title,
     });
     this.overlayTitle2 = createElement('span', {
-      classes: ['hero-banner__title', this.config.textShadow ? 'hero-banner__text-shadow' : ''].filter(Boolean),
+      classes: ['hero-banner-title', this.config.textShadow ? 'hero-banner-text-shadow' : ''].filter(Boolean),
       text: this.config.title2,
     });
 
-    if (this.config.subtitle) headingWrap.append(this.overlaySubtitle);
-    if (this.config.title) headingWrap.append(this.overlayTitle);
-    if (this.config.title2) headingWrap.append(this.overlayTitle2);
-    if (headingWrap.children.length) content.append(headingWrap);
+    if (this.config.subtitle) group.append(this.overlaySubtitle);
+    if (this.config.title) group.append(this.overlayTitle);
+    if (this.config.title2) group.append(this.overlayTitle2);
+    if (group.children.length) content.append(group);
 
-    this.actions = createElement('ul', { classes: ['hero-banner__action-list'] });
+    this.actions = createElement('ul', { classes: ['hero-banner-action-list'] });
     gradient.append(content, this.actions);
     overlay.append(gradient);
 
     this.liveRegion = createElement('div', {
-      classes: ['hero-banner__sr-only'],
-      attrs: { 'aria-live': 'polite', 'aria-atomic': 'true' },
+      classes: ['hero-banner-sr-only'],
+      attrs: {
+        'aria-live': 'polite',
+        'aria-atomic': 'true',
+      },
     });
 
-    carouselWrapper.append(this.slideStage, overlay, this.liveRegion);
+    wrapper.append(stage, overlay, this.liveRegion);
 
     if (this.config.showContentTile && this.config.contentTileHtml) {
-      const bottomGradient = createElement('div', { classes: ['hero-banner__bottom-gradient'] });
-      carouselWrapper.append(bottomGradient);
+      wrapper.append(createElement('div', { classes: ['hero-banner-bottom-gradient'] }));
     }
 
-    root.append(carouselWrapper);
+    root.append(wrapper);
 
-    const breadcrumbNode = this.buildBreadcrumbs();
+    const breadcrumbs = this.buildBreadcrumbs();
+
     if (this.config.showContentTile && this.config.contentTileHtml) {
       const panel = createElement('div', {
-        classes: ['hero-banner__panel', breadcrumbNode ? 'hero-banner__panel--with-breadcrumbs' : ''].filter(Boolean),
+        classes: ['hero-banner-panel', breadcrumbs ? 'hero-banner-panel-with-breadcrumbs' : ''].filter(Boolean),
       });
-      if (breadcrumbNode) panel.append(breadcrumbNode);
-      this.contentTile = createElement('div', { classes: ['hero-banner__content-tile'], html: this.config.contentTileHtml });
-      if (this.config.contentTileHeight > 0) {
-        this.contentTile.style.minHeight = `${this.config.contentTileHeight}px`;
-        this.contentTile.classList.add('hero-banner__content-tile--clamped');
+
+      if (breadcrumbs) {
+        panel.append(breadcrumbs);
       }
-      panel.append(this.contentTile);
+
+      const tile = createElement('div', {
+        classes: ['hero-banner-content-tile', this.config.contentTileHeight > 0 ? 'hero-banner-content-tile-clamped' : ''].filter(Boolean),
+        html: this.config.contentTileHtml,
+      });
+
+      if (this.config.contentTileHeight > 0) {
+        tile.style.minHeight = `${this.config.contentTileHeight}px`;
+      }
+
+      panel.append(tile);
       root.append(panel);
-    } else if (breadcrumbNode) {
-      root.append(breadcrumbNode);
+    } else if (breadcrumbs) {
+      root.append(breadcrumbs);
     }
 
     this.block.append(root);
@@ -559,16 +774,55 @@ class HeroBannerBlock {
     this.applyHeight();
   }
 
+  buildBreadcrumbs() {
+    if (!this.config.breadcrumbItems?.length) {
+      return null;
+    }
+
+    const nav = createElement('nav', {
+      classes: ['hero-banner-breadcrumbs'],
+      attrs: { 'aria-label': 'Breadcrumb' },
+    });
+
+    const list = createElement('ol', { classes: ['hero-banner-breadcrumb-list'] });
+
+    this.config.breadcrumbItems.forEach((item, index) => {
+      const node = createElement('li', { classes: ['hero-banner-breadcrumb-item'] });
+
+      if (item.href && index !== this.config.breadcrumbItems.length - 1) {
+        node.append(createElement('a', {
+          classes: ['hero-banner-breadcrumb-link'],
+          attrs: { href: item.href },
+          text: item.label,
+        }));
+      } else {
+        node.append(createElement('span', {
+          classes: ['hero-banner-breadcrumb-current'],
+          text: item.label,
+        }));
+      }
+
+      list.append(node);
+    });
+
+    nav.append(list);
+    return nav;
+  }
+
   bind() {
     this.block.addEventListener('mouseenter', () => this.pause(true));
     this.block.addEventListener('mouseleave', () => {
-      if (!this.modal.isOpen()) this.resume();
+      if (!this.modal.isOpen()) {
+        this.resume();
+      }
     });
 
     this.block.addEventListener('focusin', () => this.pause(true));
     this.block.addEventListener('focusout', () => {
       window.requestAnimationFrame(() => {
-        if (!this.block.contains(document.activeElement) && !this.modal.isOpen()) this.resume();
+        if (!this.block.contains(document.activeElement) && !this.modal.isOpen()) {
+          this.resume();
+        }
       });
     });
 
@@ -577,30 +831,26 @@ class HeroBannerBlock {
         event.preventDefault();
         this.next();
       }
+
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
         this.prev();
       }
-      if (event.key === ' ' && this.playPauseButton) {
-        if (event.target === this.playPauseButton) {
-          event.preventDefault();
-          this.togglePause();
-        }
+
+      if (event.key === ' ' && event.target === this.playPauseButton) {
+        event.preventDefault();
+        this.togglePause();
       }
     });
 
     window.addEventListener('resize', this.resizeHandler);
   }
 
-  destroy() {
-    window.removeEventListener('resize', this.resizeHandler);
-    this.clearTimers();
-  }
-
   applyTheme() {
     if (this.config.color) {
       this.block.style.setProperty('--hero-banner-foreground', this.config.color);
     }
+
     if (this.config.headlineColor) {
       this.block.style.setProperty('--hero-banner-headline-color', this.config.headlineColor);
     }
@@ -608,228 +858,201 @@ class HeroBannerBlock {
 
   applyHeight() {
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-    const computed = Math.max(this.config.minHeight || 0, Math.round(viewportHeight * this.config.heightRatio));
-    this.block.style.setProperty('--hero-banner-height', `${computed}px`);
-  }
-
-  hasBannerTitle() {
-    return Boolean((this.config.title || '').trim());
-  }
-
-  hasVideoSlides() {
-    return this.slides.some((slide) => Boolean(slide.video));
-  }
-
-  buildBreadcrumbs() {
-    if (!this.config.breadcrumbItems || !this.config.breadcrumbItems.length) return null;
-    const nav = createElement('nav', { classes: ['hero-banner__breadcrumbs'], attrs: { 'aria-label': 'Breadcrumb' } });
-    const list = createElement('ol', { classes: ['hero-banner__breadcrumb-list'] });
-
-    this.config.breadcrumbItems.forEach((item, index) => {
-      const li = createElement('li', { classes: ['hero-banner__breadcrumb-item'] });
-      if (item.href && index !== this.config.breadcrumbItems.length - 1) {
-        const link = createElement('a', { classes: ['hero-banner__breadcrumb-link'], attrs: { href: item.href }, text: item.label });
-        li.append(link);
-      } else {
-        li.append(createElement('span', { classes: ['hero-banner__breadcrumb-current'], text: item.label }));
-      }
-      list.append(li);
-    });
-
-    nav.append(list);
-    return nav;
+    const computedHeight = Math.max(this.config.minHeight || 0, Math.round(viewportHeight * this.config.heightRatio));
+    this.block.style.setProperty('--hero-banner-height', `${computedHeight}px`);
   }
 
   buildActions() {
     this.actions.innerHTML = '';
+    const active = this.config.slides[this.currentIndex];
 
-    const activeSlide = this.config.slides[this.currentIndex];
-    const showInfo = containsHtml(activeSlide?.infoHtml || '');
-    const showPlayback = this.config.showPlayPauseButton && (this.slides.length > 1 || this.hasVideoSlides());
-
-    if (showInfo) {
-      const item = this.buildActionItem('7px');
-      this.infoButton = createElement('button', {
-        classes: ['hero-banner__icon-button'],
-        attrs: { type: 'button', 'aria-label': 'More information' },
+    if (containsHtml(active?.infoHtml || '')) {
+      const infoItem = createElement('li', { classes: ['hero-banner-action-item'] });
+      const infoButton = createElement('button', {
+        classes: ['hero-banner-icon-button'],
+        attrs: {
+          type: 'button',
+          'aria-label': 'More information',
+        },
       });
-      this.infoButton.append(this.buildInfoIcon());
-      this.infoButton.addEventListener('click', () => {
+
+      infoButton.innerHTML = [
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false">',
+        '<circle cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2"></circle>',
+        '<circle cx="15" cy="9" r="1.5" fill="currentColor"></circle>',
+        '<path d="M14 13h2v8h-2z" fill="currentColor"></path>',
+        '</svg>',
+      ].join('');
+
+      infoButton.addEventListener('click', () => {
         this.pause(true);
-        this.modal.open(activeSlide.infoHtml);
+        this.modal.open(active.infoHtml);
       });
-      item.append(this.infoButton);
-      this.actions.append(item);
+
+      infoItem.append(infoButton);
+      this.actions.append(infoItem);
+      this.infoButton = infoButton;
     }
 
-    if (showPlayback) {
-      const item = this.buildActionItem('7px');
+    if (this.shouldShowPlayback()) {
+      const buttonItem = createElement('li', { classes: ['hero-banner-action-item'] });
       this.playPauseButton = createElement('button', {
-        classes: ['hero-banner__icon-button', 'hero-banner__play-pause'],
+        classes: ['hero-banner-icon-button', 'hero-banner-play-pause'],
         attrs: {
           type: 'button',
           'aria-label': this.paused ? 'Play hero banner' : 'Pause hero banner',
         },
       });
+
       this.playPauseButton.addEventListener('click', () => this.togglePause());
-      this.playPauseButton.append(this.buildPlayPauseIcon());
-      item.append(this.playPauseButton);
-      this.actions.append(item);
-      this.updateProgressRing();
+      this.renderPlayPauseIcon();
+      buttonItem.append(this.playPauseButton);
+      this.actions.append(buttonItem);
     } else {
       this.playPauseButton = null;
     }
   }
 
-  buildActionItem(padding = '7px') {
-    const li = this.createElement('li', { classes: ['hero-banner__action-item'] });
-    li.style.padding = padding;
-    return li;
-  }
+  renderPlayPauseIcon() {
+    if (!this.playPauseButton) {
+      return;
+    }
 
-  buildInfoIcon() {
-    const svg = this.createElement('svg', {
-      attrs: {
-        xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 30 30', width: '30', height: '30', 'aria-hidden': 'true', focusable: 'false',
-      },
-    });
-    svg.innerHTML = '<circle cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2"></circle><circle cx="15" cy="9" r="1.5" fill="currentColor"></circle><path d="M14 13h2v8h-2z" fill="currentColor"></path>';
-    return svg;
-  }
-
-  buildPlayPauseIcon() {
-    const svg = createElement('svg', {
-      attrs: {
-        xmlns: 'http://www.w3.org/2000/svg', viewBox: '0 0 30 30', width: '30', height: '30', 'aria-hidden': 'true', focusable: 'false',
-      },
-    });
-
-    const ringClass = this.paused ? 'hero-banner__progress-ring is-paused' : 'hero-banner__progress-ring';
     const symbol = this.paused
-      ? '<path class="hero-banner__play-icon" d="M11.5 10.8v8.5c0 .3.2.6.5.7s.6.1.9-.1l5.4-4.2c.4-.3.4-.9 0-1.2l-5.4-4.2c-.2-.2-.6-.2-.9-.1-.3 0-.5.3-.5.6z" fill="currentColor"></path>'
-      : '<path class="hero-banner__pause-icon" d="M13 9c.6 0 1 .4 1 1v10c0 .6-.4 1-1 1h-1c-.6 0-1-.4-1-1V10c0-.6.4-1 1-1h1zm5 0c.6 0 1 .4 1 1v10c0 .6-.4 1-1 1h-1c-.6 0-1-.4-1-1V10c0-.6.4-1 1-1h1z" fill="currentColor"></path>';
+      ? '<path d="M11.5 10.8v8.5c0 .3.2.6.5.7s.6.1.9-.1l5.4-4.2c.4-.3.4-.9 0-1.2l-5.4-4.2c-.2-.2-.6-.2-.9-.1-.3 0-.5.3-.5.6z" fill="currentColor"></path>'
+      : '<path d="M13 9c.6 0 1 .4 1 1v10c0 .6-.4 1-1 1h-1c-.6 0-1-.4-1-1V10c0-.6.4-1 1-1h1zm5 0c.6 0 1 .4 1 1v10c0 .6-.4 1-1 1h-1c-.6 0-1-.4-1-1V10c0-.6.4-1 1-1h1z" fill="currentColor"></path>';
 
-    svg.innerHTML = `
-      ${symbol}
-      <circle class="hero-banner__progress-ring-bg" cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2" opacity=".2" transform="rotate(-90, 15, 15)"></circle>
-      <circle class="${ringClass}" cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-90, 15, 15)"></circle>
-    `;
+    this.playPauseButton.innerHTML = [
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" aria-hidden="true" focusable="false">',
+      symbol,
+      '<circle class="hero-banner-progress-ring-bg" cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2" transform="rotate(-90 15 15)"></circle>',
+      '<circle class="hero-banner-progress-ring" cx="15" cy="15" r="14" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(-90 15 15)"></circle>',
+      '</svg>',
+    ].join('');
 
-    return svg;
+    this.playPauseButton.setAttribute('aria-label', this.paused ? 'Play hero banner' : 'Pause hero banner');
+    this.updateProgressRing();
   }
 
   updateProgressRing() {
-    if (!this.playPauseButton) return;
-    const ring = this.playPauseButton.querySelector('.hero-banner__progress-ring');
-    if (!ring) return;
+    const ring = this.playPauseButton?.querySelector('.hero-banner-progress-ring');
+
+    if (!ring) {
+      return;
+    }
+
     ring.style.strokeDashoffset = String(300 - (90 / 100) * this.progress);
   }
 
   clearTimers() {
-    window.clearInterval(this.interval);
-    window.clearInterval(this.progressInterval);
-    this.interval = null;
-    this.progressInterval = null;
+    window.clearTimeout(this.advanceTimer);
+    window.clearInterval(this.progressTimer);
+    this.advanceTimer = null;
+    this.progressTimer = null;
   }
 
   start(duration) {
     this.clearTimers();
     this.paused = false;
-    this.updatePlayPauseUi();
+    this.progress = 0.001;
+    this.renderPlayPauseIcon();
 
     const total = Math.max(1000, duration || this.config.autoplay || 5000);
-    this.progress = 0.001;
-    this.updateProgressRing();
 
-    this.progressInterval = window.setInterval(() => {
-      if (this.paused) return;
+    this.progressTimer = window.setInterval(() => {
       this.progress = Math.min(100, this.progress + 1);
       this.updateProgressRing();
     }, total / 100);
 
-    this.interval = window.setTimeout(() => {
-      if (!this.paused) this.next();
+    this.advanceTimer = window.setTimeout(() => {
+      if (!this.paused) {
+        this.next();
+      }
     }, total);
   }
 
   pause(soft = false) {
     this.paused = true;
-    if (!soft) this.clearTimers();
+
+    if (!soft) {
+      this.clearTimers();
+    }
+
     this.slides[this.currentIndex]?.video?.pause();
-    this.updatePlayPauseUi();
+    this.renderPlayPauseIcon();
   }
 
   resume() {
-    const showPlayback = this.config.showPlayPauseButton && (this.slides.length > 1 || this.hasVideoSlides());
-    if (!showPlayback) return;
-    const activeSlide = this.slides[this.currentIndex];
-    if (activeSlide?.video) {
-      activeSlide.video.play().catch(() => { });
+    if (!this.shouldShowPlayback()) {
+      return;
     }
-    this.start(this.getActiveSlideDuration());
+
+    this.slides[this.currentIndex]?.video?.play?.().catch(() => {});
+    this.start(this.getActiveDuration());
   }
 
   togglePause() {
-    if (this.paused) this.resume();
-    else this.pause();
+    if (this.paused) {
+      this.resume();
+    } else {
+      this.pause();
+    }
   }
 
-  updatePlayPauseUi() {
-    if (!this.playPauseButton) return;
-    this.playPauseButton.setAttribute('aria-label', this.paused ? 'Play hero banner' : 'Pause hero banner');
-    this.playPauseButton.innerHTML = '';
-    this.playPauseButton.append(this.buildPlayPauseIcon());
-    this.updateProgressRing();
+  getActiveDuration() {
+    return this.slides[this.currentIndex]?.getDuration(this.config.autoplay) || this.config.autoplay;
   }
 
-  getActiveSlideDuration() {
-    const activeSlide = this.slides[this.currentIndex];
-    return activeSlide ? activeSlide.getDuration(this.config.autoplay) : this.config.autoplay;
+  updateOverlayText() {
+    const active = this.config.slides[this.currentIndex];
+    const subtitle = active?.eyebrow || this.config.subtitle;
+    const title = active?.heading || this.config.title;
+    const title2 = active?.heading2 || this.config.title2;
+
+    if (this.overlaySubtitle) {
+      this.overlaySubtitle.textContent = subtitle || '';
+      this.overlaySubtitle.hidden = !subtitle;
+    }
+
+    if (this.overlayTitle) {
+      this.overlayTitle.textContent = title || '';
+      this.overlayTitle.hidden = !title;
+    }
+
+    if (this.overlayTitle2) {
+      this.overlayTitle2.textContent = title2 || '';
+      this.overlayTitle2.hidden = !title2;
+    }
   }
 
   announce() {
     const active = this.config.slides[this.currentIndex];
-    const text = [active?.eyebrow, active?.heading, active?.heading2].filter(Boolean).join(' ')
-      || `Slide ${this.currentIndex + 1} of ${this.slides.length}`;
-    if (this.liveRegion) this.liveRegion.textContent = text;
-  }
-
-  updateSlideText() {
-    const active = this.config.slides[this.currentIndex];
-    const useSlideSubtitle = active?.eyebrow || this.config.subtitle;
-    const useSlideTitle = active?.heading || this.config.title;
-    const useSlideTitle2 = active?.heading2 || this.config.title2;
-
-    if (this.overlaySubtitle) {
-      this.overlaySubtitle.textContent = useSlideSubtitle || '';
-      this.overlaySubtitle.hidden = !useSlideSubtitle;
-    }
-    if (this.overlayTitle) {
-      this.overlayTitle.textContent = useSlideTitle || '';
-      this.overlayTitle.hidden = !useSlideTitle;
-    }
-    if (this.overlayTitle2) {
-      this.overlayTitle2.textContent = useSlideTitle2 || '';
-      this.overlayTitle2.hidden = !useSlideTitle2;
-    }
+    const label = [active?.eyebrow, active?.heading, active?.heading2].filter(Boolean).join(' ') || `Slide ${this.currentIndex + 1} of ${this.slides.length}`;
+    this.liveRegion.textContent = label;
   }
 
   goTo(index, { silent = false } = {}) {
-    if (!this.slides.length) return;
-    const bounded = (index + this.slides.length) % this.slides.length;
+    if (!this.slides.length) {
+      return;
+    }
+
+    const nextIndex = (index + this.slides.length) % this.slides.length;
 
     this.slides.forEach((slide, slideIndex) => {
-      if (slideIndex === bounded) slide.activate();
-      else slide.deactivate();
+      if (slideIndex === nextIndex) {
+        slide.activate();
+      } else {
+        slide.deactivate();
+      }
     });
 
-    this.currentIndex = bounded;
-    this.updateSlideText();
+    this.currentIndex = nextIndex;
+    this.updateOverlayText();
     this.buildActions();
     this.announce();
 
     if (!silent && !this.paused) {
-      this.start(this.getActiveSlideDuration());
+      this.start(this.getActiveDuration());
     }
   }
 
@@ -843,6 +1066,5 @@ class HeroBannerBlock {
 }
 
 export default function decorate(block) {
-  const heroBanner = new HeroBannerBlock(block);
-  heroBanner.init();
+  new HeroBannerBlock(block).init();
 }
