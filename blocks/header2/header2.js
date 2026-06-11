@@ -206,7 +206,7 @@ export default async function decorate(block) {
     component.teqLogoSrc = data.teqLogoSrc;
   }
 
-  if (data.teqLogoWhite) {
+  if (data.teqLogoWhiteSrc) {
     component.teqLogoWhiteSrc = data.teqLogoWhiteSrc;
   }
 
