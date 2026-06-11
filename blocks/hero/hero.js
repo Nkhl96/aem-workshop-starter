@@ -426,19 +426,19 @@ class HeroBannerBlock {
   constructor(block) {
     this.block = block;
     this.defaults = { ...DEFAULTS };
-    const parsed = parseJson(block) || parseDom(block) || {};
+    // const parsed = parseJson(block) || parseDom(block) || {};
     this.config = {
       ...this.defaults,
-      ...parsed,
-      heightRatio: Math.max(0.2, numberify(parsed.heightRatio, this.defaults.heightRatio)),
-      autoplay: numberify(parsed.autoplay, this.defaults.autoplay),
-      minHeight: numberify(parsed.minHeight, this.defaults.minHeight),
-      contentTileHeight: numberify(parsed.contentTileHeight, this.defaults.contentTileHeight),
-      textShadow: boolify(parsed.textShadow, this.defaults.textShadow),
-      showPlayPauseButton: boolify(parsed.showPlayPauseButton, this.defaults.showPlayPauseButton),
-      showContentTile: boolify(parsed.showContentTile, this.defaults.showContentTile),
-      breadcrumbItems: Array.isArray(parsed.breadcrumbItems) ? parsed.breadcrumbItems : [...this.defaults.breadcrumbItems],
-      slides: Array.isArray(parsed.slides) ? parsed.slides : [...this.defaults.slides],
+      // ...parsed,
+      // heightRatio: Math.max(0.2, numberify(parsed.heightRatio, this.defaults.heightRatio)),
+      // autoplay: numberify(parsed.autoplay, this.defaults.autoplay),
+      // minHeight: numberify(parsed.minHeight, this.defaults.minHeight),
+      // contentTileHeight: numberify(parsed.contentTileHeight, this.defaults.contentTileHeight),
+      // textShadow: boolify(parsed.textShadow, this.defaults.textShadow),
+      // showPlayPauseButton: boolify(parsed.showPlayPauseButton, this.defaults.showPlayPauseButton),
+      // showContentTile: boolify(parsed.showContentTile, this.defaults.showContentTile),
+      // breadcrumbItems: Array.isArray(parsed.breadcrumbItems) ? parsed.breadcrumbItems : [...this.defaults.breadcrumbItems],
+      // slides: Array.isArray(parsed.slides) ? parsed.slides : [...this.defaults.slides],
     };
 
     this.index = 0;
