@@ -203,17 +203,11 @@ export default async function decorate(block) {
   }
 
   if (data.teqLogoSrc) {
-    component.teqLogo = {
-      ...(component.teqLogo || {}),
-      src: data.teqLogoSrc,
-    };
+    component.teqLogoSrc = data.teqLogoSrc;
   }
 
   if (data.teqLogoWhite) {
-    component.teqLogoWhite = {
-      ...(component.teqLogoWhite || {}),
-      src: data.teqLogoWhite,
-    };
+    component.teqLogoWhiteSrc = data.teqLogoWhiteSrc;
   }
 
   if (data.searchResultsPage) {

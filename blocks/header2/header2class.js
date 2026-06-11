@@ -5,18 +5,8 @@ export default class HeaderMenu2 extends HTMLElement {
     // Authorable properties (safe fallbacks overridden by EDS block data)
     this.enableV2 = true;
     this.variation = 'transparent';
-    this.teqLogo = {
-      src: '',
-      alt: null,
-      link: null,
-      quality: 0.0,
-    };
-    this.teqLogoWhite = {
-      src: '',
-      alt: null,
-      link: null,
-      quality: 0.0,
-    };
+    this.teqLogoSrc = '';
+    this.teqLogoWhiteSrc = '';
     this.searchResultsPage = '';
     this.backText = 'Back';
     this.cancelText = 'Cancel';
@@ -393,7 +383,7 @@ export default class HeaderMenu2 extends HTMLElement {
     const logoDiv = document.createElement('div');
     logoDiv.className = `logo ${logoClass}`;
 
-    const logoAsset = this.state.isTransparentVariation ? this.teqLogoWhite : this.teqLogo;
+    const logoAsset = this.state.isTransparentVariation ? this.teqLogoWhiteSrc : this.teqLogoSrc;
     const logoLink = document.createElement('a');
     logoLink.href = logoAsset?.link?.href || this.state.homeUrl;
     logoLink.setAttribute('aria-label', logoAsset?.alt || 'Home');
