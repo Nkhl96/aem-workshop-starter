@@ -388,10 +388,10 @@ export default class HeaderMenu2 extends HTMLElement {
     logoLink.href = logoAsset?.link?.href || this.state.homeUrl;
     logoLink.setAttribute('aria-label', logoAsset?.alt || 'Home');
 
-    if (logoAsset?.src) {
+    if (logoAsset) {
       const logoImage = document.createElement('img');
       logoImage.className = 'teq-logo';
-      logoImage.src = logoAsset.src;
+      logoImage.src = logoAsset;
       logoImage.alt = logoAsset.alt || 'TEQ logo';
       logoImage.width = 145;
       logoImage.height = 40;
