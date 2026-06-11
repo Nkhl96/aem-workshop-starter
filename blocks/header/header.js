@@ -194,44 +194,44 @@ export default async function decorate(block) {
 
   console.log('Data Blocks: ', data);
 
-  if (data.enableV2 !== undefined) {
+  if (data?.enableV2 !== undefined) {
     component.enableV2 = parseBoolean(data.enableV2, true);
   }
 
-  if (data.variation) {
+  if (data?.variation) {
     component.variation = data.variation;
   }
 
-  if (data.teqLogoSrc) {
+  if (data?.teqLogoSrc) {
     component.teqLogoSrc = data.teqLogoSrc;
   }
 
-  if (data.teqLogoWhiteSrc) {
+  if (data?.teqLogoWhiteSrc) {
     component.teqLogoWhiteSrc = data.teqLogoWhiteSrc;
   }
 
-  if (data.searchResultsPage) {
+  if (data?.searchResultsPage) {
     component.searchResultsPage = data.searchResultsPage;
   }
 
-  if (data.backText) {
+  if (data?.backText) {
     component.backText = data.backText;
   }
 
-  if (data.cancelText) {
+  if (data?.cancelText) {
     component.cancelText = data.cancelText;
   }
 
-  if (data.suggestText) {
+  if (data?.suggestText) {
     component.suggestText = data.suggestText;
     component.suggestedText = data.suggestText;
   }
 
-  if (data.popularSearchesText) {
+  if (data?.popularSearchesText) {
     component.popularSearchesText = data.popularSearchesText;
   }
 
-  if (data.searchForText) {
+  if (data?.searchForText) {
     component.searchForText = data.searchForText;
   }
 
