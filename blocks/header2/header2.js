@@ -169,9 +169,29 @@ function parseBoolean(value, fallback = false) {
   return String(value).toLowerCase() === 'true';
 }
 
+function readBlockConfig(block) {
+  const config = {};
+
+  [...block.children].forEach((row) => {
+    const cells = [...row.children];
+    if (cells.length < 2) return;
+
+    const key = cells[0].textContent.trim();
+    const value = cells[1].textContent.trim();
+
+    if (key) {
+      config[key] = value;
+    }
+  });
+
+  return config;
+}
+
+
 export default async function decorate(block) {
   const component = document.createElement('header-menu2');
-  const data = block.dataset;
+
+  const data = readBlockConfig(block);
 
   console.log('Data Blocks: ', block);
 
