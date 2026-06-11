@@ -187,13 +187,12 @@ function readBlockConfig(block) {
   return config;
 }
 
-
 export default async function decorate(block) {
   const component = document.createElement('header-menu2');
 
   const data = readBlockConfig(block);
 
-  console.log('Data Blocks: ', block);
+  console.log('Data Blocks: ', data);
 
   if (data.enableV2 !== undefined) {
     component.enableV2 = parseBoolean(data.enableV2, true);
